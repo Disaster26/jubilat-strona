@@ -1260,3 +1260,4 @@ a,button{-webkit-tap-highlight-color:transparent}
 .akt>span:empty{display:block;aspect-ratio:4/3;background:var(--szar);position:relative;overflow:hidden}
 .akt>span:empty::after{content:"";position:absolute;right:-8%;bottom:-14%;width:62%;aspect-ratio:510/610;background:var(--or);opacity:.85;-webkit-mask:var(--skrz) center/contain no-repeat;mask:var(--skrz) center/contain no-repeat}
 @media (max-width:760px){.akt>span:empty{display:none}}
+#menu+.bar-akt{padding-top:0}#menu+.bar-akt .bar-akt-uklad{border-top:1px solid var(--linia);padding-top:clamp(40px,5vw,72px)}
