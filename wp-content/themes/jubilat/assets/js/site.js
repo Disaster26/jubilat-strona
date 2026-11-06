@@ -273,7 +273,7 @@
   function zaslepkaAll(el, p) {
     var ile = D.pl.length, sk = D.pl.filter(function (x) { return x.typ === 'sklep'; }).length;
     el.setAttribute('data-tryb', 'zgoda');
-    el.innerHTML = '<div class="mz mz-all"><p class="mz-k">Mapa Google</p><p class="mz-n">' + (p ? esc(p.nz) : ile + ' placówek Jubilat na jednej mapie') + '</p><p class="mz-a">'
+    el.innerHTML = '<div class="mz mz-all"><p class="mz-k">Mapa Google</p><p class="mz-n">' + (p ? esc(p.nz) : 'Sklepy Jubilat w Krakowie na jednej mapie') + '</p><p class="mz-a">'
       + (p ? esc(p.q.replace(p.nz + ', ', '')) : 'Dom Handlowy przy al. Krasińskiego, ' + sk + ' sklepów osiedlowych i bary mleczne Żaczek i Flisak.') + '</p>'
       + '<div class="mz-akcje"><button type="button" class="mz-pokaz">Pokaż mapę Google (akceptuję cookies Google)</button>' + (p ? '<a class="mz-trasa" href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a>' : '') + '</div></div>';
     $('.mz-pokaz', el).addEventListener('click', function () { zgodaDaj(); mapaAll(el, el.getAttribute('data-akt')); });
@@ -336,10 +336,11 @@
     if (p) el.setAttribute('data-akt', id); else el.removeAttribute('data-akt');
     if (!zgMapy()) { zaslepkaAll(el, p); podpis(el, p, false); return; }
     if (GK) { apiMapa(el, id); podpis(el, p, false); return; }
-    if (p) { iframe(el, gUrl(p), 'Mapa Google: ' + p.nz); el.setAttribute('data-tryb', 'jedna'); podpis(el, p, !!MM); return; }
+    if (p) { iframe(el, gUrl(p), 'Mapa Google: ' + p.nz); el.setAttribute('data-tryb', 'jedna'); podpis(el, p, true); return; }
     if (MM) { iframe(el, MM, 'Mapa Google: wszystkie placówki Jubilat'); el.setAttribute('data-tryb', 'mymaps'); podpis(el, null); return; }
-    var dh = D.pl.filter(function (x) { return x.typ === 'dh'; })[0] || D.pl[0];
-    iframe(el, gUrl(dh), 'Mapa Google: ' + dh.nz); el.setAttribute('data-tryb', 'jedna'); podpis(el, dh, false);
+    /* bez klucza i bez My Maps: Mapa Google z wynikami wyszukiwania sklepów Jubilat w Krakowie (działa bez uprawnień) */
+    iframe(el, 'https://maps.google.com/maps?q=' + encodeURIComponent('Jubilat sklep spożywczo-przemysłowy Kraków') + '&ll=50.075,19.89&z=' + (el.clientWidth < 560 ? 11 : 12) + '&hl=pl&output=embed', 'Mapa Google: sklepy Jubilat w Krakowie');
+    el.setAttribute('data-tryb', 'wyszukiwanie'); podpis(el, null);
   }
   function ustawMape(el, id) {
     if (el === mapa) { mapaAll(el, id); return; }
@@ -515,7 +516,7 @@
     panel.addEventListener('click', function (e) { if (e.target.closest('a')) zamknij(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { zamknij(); burger.focus(); } });
   }
-  var mob = $('#mob'), cel = $('.hero-cta') || $('.elx-cta') || $('.elh-cta') || $('.ph-meta') || $('.ph h1') || $('.art h1');
+  var mob = $('#mob'), cel = $('.hero-cta') || $('.bh-cta') || $('.elx-cta') || $('.elh-cta') || $('.ph-meta') || $('.ph h1') || $('.art h1');
   if (mob && cel && 'IntersectionObserver' in window) {
     var zaCel = false, stopkaWidac = false, st = $('.stopka');
     var rysujMob = function () { mob.classList.toggle('widac', zaCel && !stopkaWidac); document.body.classList.toggle('mob-on', zaCel && !stopkaWidac); };
@@ -526,5 +527,16 @@
   /* ---------- start ---------- */
   function wszystko() { T = teraz(); DZIS = dzien(T, 0).k; rysujStatusy(); rysujDzis(); rysujDaty(); rysujMenu(); filtruj(); }
   wszystko();
+  /* ---------- menu baru: zakładki dni (telefon), dziś otwarte domyślnie ---------- */
+  $$('.menu-karta').forEach(function (k) {
+    var tabs = $$('.menu-dni button', k), ul = $('.menu-t', k); if (!tabs.length || !ul) return;
+    var wybierz = function (d) {
+      tabs.forEach(function (b) { b.setAttribute('aria-selected', String(b.getAttribute('data-dzien') === d)); });
+      $$('li[data-dzien]', ul).forEach(function (li) { li.classList.toggle('wyb', li.getAttribute('data-dzien') === d); });
+    };
+    tabs.forEach(function (b) { b.addEventListener('click', function () { wybierz(b.getAttribute('data-dzien')); }); });
+    var dz = $('li.dzisiaj', ul); wybierz(dz ? dz.getAttribute('data-dzien') : '1');
+    if (dz) { var t = k.querySelector('.menu-dni button[data-dzien="' + dz.getAttribute('data-dzien') + '"]'); if (t) t.classList.add('dzis'); }
+  });
   setInterval(wszystko, 60000);
 })();
