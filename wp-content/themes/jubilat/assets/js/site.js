@@ -269,41 +269,23 @@
     if (!f) { el.innerHTML = ''; f = document.createElement('iframe'); f.setAttribute('referrerpolicy', 'no-referrer-when-downgrade'); f.setAttribute('allowfullscreen', ''); el.appendChild(f); }
     f.title = tytul; if (f.getAttribute('src') !== src) f.src = src;
   }
-  /* schemat: placówki rozmieszczone według współrzędnych + numerowana lista (bez Google i bez cookies) */
-  function schemat(el) {
-    var pts = D.pl.slice(), RYN = { lat: 50.0617, lng: 19.9373 };
-    var all = pts.concat([RYN]).concat(TY ? [TY] : []);
-    var f = function (k, fn) { return Math[fn].apply(0, all.map(function (p) { return p[k]; })); };
-    var la0 = f('lat', 'min'), la1 = f('lat', 'max'), lo0 = f('lng', 'min'), lo1 = f('lng', 'max');
-    var k = Math.cos(50.06 * Math.PI / 180), w = (lo1 - lo0) * k || 0.01, h = (la1 - la0) || 0.01;
-    var X = function (p) { return 7 + 86 * ((p.lng - lo0) * k) / w; }, Y = function (p) { return 10 + 80 * (la1 - p.lat) / h; };
-    var xy = function (p) { return 'left:' + X(p).toFixed(2) + '%;top:' + Y(p).toFixed(2) + '%'; };
-    /* rozsunięcie pinezek leżących bardzo blisko siebie (np. DH i bar Flisak) */
-    var W = Math.max(280, el.clientWidth || 600), H = W * 0.62, px = pts.map(function (p) { return [X(p) * W / 100, Y(p) * H / 100]; });
-    for (var it = 0; it < 40; it++) for (var i1 = 0; i1 < px.length; i1++) for (var j1 = i1 + 1; j1 < px.length; j1++) {
-      var dx = px[j1][0] - px[i1][0], dy = px[j1][1] - px[i1][1], dd = Math.sqrt(dx * dx + dy * dy) || 0.1, mn = 40;
-      if (dd < mn) { var m2 = (mn - dd) / 2, ux = dx / dd, uy = dy / dd; if (dd < 0.2) { ux = 0.7; uy = 0.7; } px[i1][0] -= ux * m2; px[i1][1] -= uy * m2; px[j1][0] += ux * m2; px[j1][1] += uy * m2; }
-    }
-    var pos = function (i) { return 'left:' + Math.min(96, Math.max(4, px[i][0] / W * 100)).toFixed(2) + '%;top:' + Math.min(94, Math.max(6, px[i][1] / H * 100)).toFixed(2) + '%'; };
-    var nr = function (p) { return ETYK[p.id]; };
-    var piny = pts.map(function (p, i) { return '<button type="button" class="sch-pin sch-' + p.typ + '" style="' + pos(i) + '" data-id="' + p.id + '" aria-label="' + esc(p.nz) + '">' + nr(p, i) + '</button>'; }).join('');
-    var leg = pts.map(function (p, i) { return '<li><button type="button" data-id="' + p.id + '"><b class="sch-' + p.typ + '">' + nr(p, i) + '</b>' + esc(p.typ === 'sklep' ? p.n : p.nz) + '</button></li>'; }).join('');
-    var g = (MM || GK) ? '<button type="button" class="sch-google">Pokaż Mapę Google ze wszystkimi placówkami' + (zgMapy() ? '' : ' (akceptuję cookies Google)') + '</button>' : '';
-    el.innerHTML = '<div class="sch"><div class="sch-pole" role="group" aria-label="Schemat rozmieszczenia placówek Jubilat w Krakowie"><span class="sch-ryn" style="' + xy(RYN) + '">Rynek Główny</span>' + piny
-      + (TY ? '<span class="sch-ty" style="' + xy(TY) + '">Ty</span>' : '') + '</div><div class="sch-dol"><ol class="sch-leg">' + leg + '</ol>' + g + '</div></div>';
-    el.setAttribute('data-tryb', 'schemat');
+  /* mapa wszystkich placówek przed zgodą: zaproszenie do Mapy Google (bez ładowania Google) */
+  function zaslepkaAll(el, p) {
+    var ile = D.pl.length, sk = D.pl.filter(function (x) { return x.typ === 'sklep'; }).length;
+    el.setAttribute('data-tryb', 'zgoda');
+    el.innerHTML = '<div class="mz mz-all"><p class="mz-k">Mapa Google</p><p class="mz-n">' + (p ? esc(p.nz) : ile + ' placówek Jubilat na jednej mapie') + '</p><p class="mz-a">'
+      + (p ? esc(p.q.replace(p.nz + ', ', '')) : 'Dom Handlowy przy al. Krasińskiego, ' + sk + ' sklepów osiedlowych i bary mleczne Żaczek i Flisak.') + '</p>'
+      + '<div class="mz-akcje"><button type="button" class="mz-pokaz">Pokaż mapę Google (akceptuję cookies Google)</button>' + (p ? '<a class="mz-trasa" href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a>' : '') + '</div></div>';
+    $('.mz-pokaz', el).addEventListener('click', function () { zgodaDaj(); mapaAll(el, el.getAttribute('data-akt')); });
   }
-  function zaznacz(id) { if (mapa) $$('.sch [data-id]', mapa).forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-id') === id); }); }
   function podpis(el, p, pojedyncza) {
     if (el !== mapa) return;
     var c = $('#mapaPodpis');
     if (c) {
       var wroc = pojedyncza ? '<button type="button" class="mp-wszystkie">Wszystkie placówki</button>' : '';
-      var gl = p && !pojedyncza && el.getAttribute('data-tryb') === 'schemat' ? '<button type="button" class="mp-google" data-id="' + p.id + '">Mapa Google</button>' : '';
-      c.innerHTML = p ? '<b>' + esc(p.nz) + '</b><span>' + gl + '<a href="' + p.u + '">Godziny i dojazd</a><a href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a>' + wroc + '</span>' : '';
+      c.innerHTML = p ? '<b>' + esc(p.nz) + '</b><span><a href="' + p.u + '">Godziny i dojazd</a><a href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a>' + wroc + '</span>' : '';
     }
     $$('.pl').forEach(function (x) { x.classList.toggle('pl-akt', !!p && x.dataset.id === p.id); });
-    zaznacz(p ? p.id : null);
   }
   /* Google Maps JavaScript API: znaczniki w kolorach marki, karta placówki po kliknięciu */
   function apiLaduj(cb) {
@@ -352,14 +334,12 @@
   function mapaAll(el, id) {
     var p = id ? PL[id] : null;
     if (p) el.setAttribute('data-akt', id); else el.removeAttribute('data-akt');
-    if (GK && zgMapy()) { apiMapa(el, id); podpis(el, p, false); return; }
-    if (MM && zgMapy()) {
-      if (p) { iframe(el, gUrl(p), 'Mapa Google: ' + p.nz); el.setAttribute('data-tryb', 'jedna'); podpis(el, p, true); }
-      else { iframe(el, MM, 'Mapa Google: wszystkie placówki Jubilat'); el.setAttribute('data-tryb', 'mymaps'); podpis(el, null); }
-      return;
-    }
-    if (el.getAttribute('data-tryb') !== 'schemat' || el.getAttribute('data-ty') !== String(!!TY)) { schemat(el); el.setAttribute('data-ty', String(!!TY)); }
-    podpis(el, p, false);
+    if (!zgMapy()) { zaslepkaAll(el, p); podpis(el, p, false); return; }
+    if (GK) { apiMapa(el, id); podpis(el, p, false); return; }
+    if (p) { iframe(el, gUrl(p), 'Mapa Google: ' + p.nz); el.setAttribute('data-tryb', 'jedna'); podpis(el, p, !!MM); return; }
+    if (MM) { iframe(el, MM, 'Mapa Google: wszystkie placówki Jubilat'); el.setAttribute('data-tryb', 'mymaps'); podpis(el, null); return; }
+    var dh = D.pl.filter(function (x) { return x.typ === 'dh'; })[0] || D.pl[0];
+    iframe(el, gUrl(dh), 'Mapa Google: ' + dh.nz); el.setAttribute('data-tryb', 'jedna'); podpis(el, dh, false);
   }
   function ustawMape(el, id) {
     if (el === mapa) { mapaAll(el, id); return; }
@@ -375,17 +355,7 @@
   function initMapa(el) { el.setAttribute('data-widac', '1'); ustawMape(el, startId(el)); }
   function dopasuj() {}
   document.addEventListener('click', function (e) {
-    if (!mapa) return;
-    var t = e.target.closest('.sch-pin,.sch-leg button');
-    if (t) { mapaAll(mapa, t.getAttribute('data-id')); return; }
-    if (e.target.closest('.sch-google')) { zgodaDaj(); mapaAll(mapa, mapa.getAttribute('data-akt')); return; }
-    var g = e.target.closest('.mp-google');
-    if (g) {
-      zgodaDaj(); var p = PL[g.getAttribute('data-id')];
-      if (GK || MM) mapaAll(mapa, p.id); else { iframe(mapa, gUrl(p), 'Mapa Google: ' + p.nz); mapa.setAttribute('data-tryb', 'jedna'); podpis(mapa, p, true); }
-      return;
-    }
-    if (e.target.closest('.mp-wszystkie')) { mapa.setAttribute('data-tryb', ''); mapaAll(mapa, null); }
+    if (mapa && e.target.closest('.mp-wszystkie')) mapaAll(mapa, null);
   });
   if (lista) lista.addEventListener('click', function (e) {
     var b = e.target.closest('.na-mapie'); if (!b || !mapa) return;

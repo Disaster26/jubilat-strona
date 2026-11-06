@@ -100,16 +100,6 @@ p{margin:0}
 .burger span{display:block;height:2px;background:var(--ink);transition:transform .2s}
 .burger[aria-expanded="true"] span:first-child{transform:translateY(4.5px) rotate(45deg)}
 .burger[aria-expanded="true"] span:last-child{transform:translateY(-4.5px) rotate(-45deg)}
-.panel{position:fixed;inset:var(--top) 0 0 0;z-index:49;background:var(--biel);padding:8px 20px 28px;overflow:auto}
-.panel[hidden]{display:none}
-.panel nav{display:flex;flex-direction:column}
-.panel nav a{text-decoration:none;font:600 19px/1.4 var(--f-b);padding:13px 0;border-bottom:1px solid var(--linia)}
-.panel nav a[aria-current]{color:var(--or-d)}
-.panel nav a.panel-el{color:var(--bordo);font:400 26px/1.3 var(--f-el)}
-.panel-grupa{margin-top:18px;padding-top:6px}
-.panel nav.panel-grupa a{font-size:16px;font-weight:500;padding:9px 0;color:var(--szary);border-bottom:0}
-.panel-kontakt{margin-top:20px;color:var(--szary);line-height:1.6}
-.panel-kontakt a{font-weight:700;color:var(--ink)}
 
 /* ---------- strona główna: pierwszy ekran ---------- */
 .hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);min-height:calc(100svh - var(--top) - 1px);background:var(--biel)}
@@ -523,25 +513,6 @@ details.zw-mob+details.zw-mob{border-top:1px solid var(--linia)}
 .ck-l{background:none;border:0;padding:6px 2px;font:700 14.5px/1 var(--f-b);color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 body.ck-on .mob{transform:translateY(110%)!important}
 
-/* ---------- mapa wszystkich placówek: schemat z listą (bez klucza i bez linku My Maps) ---------- */
-#mapa[data-tryb="schemat"]{height:auto;min-height:0}
-.sch{background:var(--grafit);color:#fff}
-.sch-pole{position:relative;aspect-ratio:100/62;margin:0;overflow:hidden;background-color:var(--grafit);background-image:radial-gradient(circle at 72% 62%,rgba(236,105,26,.18),rgba(236,105,26,0) 55%),linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:auto,40px 40px,40px 40px}
-.sch-pin{position:absolute;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:8px;border:1.5px solid #fff;background:var(--or);color:var(--grafit);font:800 13px/1 var(--f-b);cursor:pointer;box-shadow:3px 3px 0 #000;padding:0;transition:transform .15s,background .15s}
-.sch-pin.sch-bar{border-radius:50%}
-.sch-pin.sch-dh{width:42px;height:42px;border:3px solid var(--bordo);z-index:2;font-size:13px;color:var(--bordo)}
-.sch-pin:hover,.sch-pin.on{transform:translate(-50%,-50%) scale(1.18);background:#fff;z-index:3}
-.sch-ryn{position:absolute;transform:translate(-50%,-50%);font-size:12px;font-weight:600;color:rgba(255,255,255,.6);white-space:nowrap;padding-top:16px;pointer-events:none}
-.sch-ryn::before{content:"";position:absolute;left:50%;top:0;width:8px;height:8px;margin-left:-4px;border-radius:50%;border:2px solid rgba(255,255,255,.6)}
-.sch-ty{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:#1a73e8;border:3px solid #fff;color:#fff;font:700 11px/24px var(--f-b);text-align:center;z-index:4}
-.sch-dol{padding:16px 18px 18px;border-top:1px solid rgba(255,255,255,.12)}
-.sch-leg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 16px}
-.sch-leg button{display:flex;align-items:center;gap:10px;width:100%;padding:5px 0;border:0;background:none;color:rgba(255,255,255,.86);font:500 14px/1.25 var(--f-b);text-align:left;cursor:pointer}
-.sch-leg b{flex:0 0 auto;display:grid;place-items:center;width:24px;height:24px;border-radius:6px;background:var(--or);color:var(--grafit);font-size:11px;font-weight:800}
-.sch-leg b.sch-bar{border-radius:50%}
-.sch-leg b.sch-dh{background:#fff;color:var(--bordo);box-shadow:inset 0 0 0 2px var(--bordo)}
-.sch-leg button:hover,.sch-leg button.on{color:#fff;text-decoration:underline;text-decoration-color:var(--or);text-underline-offset:3px}
-.sch-google{margin-top:14px;min-height:46px;width:100%;padding:8px 16px;border:0;background:var(--or);color:var(--grafit);font:700 14.5px/1.25 var(--f-b);cursor:pointer}
 .mapa-podpis button{background:none;border:0;padding:0;color:var(--or);font:700 14.5px var(--f-b);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .mapa-podpis .mp-wszystkie{color:#fff}
 .gm{position:absolute;inset:0}
@@ -786,17 +757,7 @@ body.ck-on .mob{transform:translateY(110%)!important}
 .elx-teraz.zamk::before{background:rgba(255,255,255,.4)}
 .elx-teraz:empty{display:none}
 
-/* świat dobrych ubrań: zdjęcie od krawędzi, tekst, drugie zdjęcie na bordowym polu */
-.el-o{background:var(--biel);position:relative;overflow:hidden}
-.el-o-uklad{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:auto 1fr;min-height:min(96vh,900px);position:relative}
-.el-o-uklad::after{content:"";position:absolute;right:0;bottom:0;width:34%;height:46%;background:var(--bordo);z-index:0}
-.el-o-a{grid-column:1;grid-row:1/3;margin:0;position:relative}
-.el-o-a picture,.el-o-a img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
-.el-o-tekst{grid-column:2;grid-row:1;padding:clamp(72px,8vw,128px) var(--g) 40px clamp(48px,6vw,110px);position:relative;z-index:1}
-.el-o-duzy{margin-top:30px;font:400 clamp(22px,1.8vw,28px)/1.42 var(--f-el);color:var(--el-tekst);max-width:34rem}
-.el-o-tekst>p:last-child{margin-top:20px;color:var(--el-szary);max-width:34rem}
-.el-o-b{grid-column:2;grid-row:2;margin:0 0 clamp(56px,6vw,96px) clamp(48px,6vw,110px);width:min(46%,340px);align-self:end;position:relative;z-index:1}
-.el-o-b img{width:100%;aspect-ratio:2/3;object-fit:cover;box-shadow:0 30px 60px -30px rgba(60,4,9,.5)}
+
 
 /* kolekcja: taśma zdjęć od nagłówka do prawej krawędzi ekranu */
 .el-kol{background:var(--el-jasny);overflow:hidden}
@@ -922,7 +883,6 @@ body.ck-on .mob{transform:translateY(110%)!important}
   .galeria{grid-template-columns:repeat(5,minmax(0,1fr))}
   .ph-foto{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .skroty{grid-template-columns:minmax(0,1fr)}
-  .el-o-uklad{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .el-wiz-uklad{grid-template-columns:minmax(0,1fr)}
   .el-wiz-tekst{padding-right:var(--g)}
   .el-wiz-mapa{min-height:420px}
@@ -993,10 +953,6 @@ body.ck-on .mob{transform:translateY(110%)!important}
   .lista-wiecej[hidden]{display:none}
   #mapa{height:320px}
   .mapa-box{margin-inline:-16px}
-  .sch-pin{width:28px;height:28px;font-size:12px}
-  .sch-pin.sch-dh{width:36px;height:36px;font-size:11.5px}
-  .sch-leg{gap:0 12px}
-  .sch-leg button{font-size:13.5px;padding:4px 0}
 
   .pietra>li{grid-template-columns:minmax(0,1fr);gap:14px;padding:26px 0}
   .p-poz{flex-direction:row;align-items:center;gap:14px}
@@ -1133,13 +1089,6 @@ body.ck-on .mob{transform:translateY(110%)!important}
   .elx-btn{min-height:50px;padding:0 22px;letter-spacing:.12em;font-size:12.5px}
   .elx-link{letter-spacing:.12em;font-size:12.5px;white-space:nowrap}
   .elx-teraz{margin-top:min(14px,1.8svh);font-size:13.5px}
-  .el-o-uklad{grid-template-columns:58% minmax(0,1fr);grid-template-rows:auto auto;min-height:0}
-  .el-o-uklad::after{width:42%;height:36%}
-  .el-o-tekst{grid-column:1/-1;grid-row:1;padding:64px 20px 40px}
-  .el-o-duzy{font-size:21px;margin-top:22px}
-  .el-o-a{grid-column:1;grid-row:2;height:min(118vw,560px)}
-  .el-o-b{grid-column:2;grid-row:2;width:auto;margin:48px 0 0 4px;align-self:start}
-  .el-o-b img{box-shadow:none}
   .el-kol .el-glowa{padding-inline:20px}
   .lk-glowa-strz{margin-top:20px}
   .el .strzalki{display:flex}
@@ -1171,9 +1120,6 @@ body.ck-on .mob{transform:translateY(110%)!important}
 .el-wiz-mapa.mapa-mini{margin:0!important}
 .el-wiz-mapa .mz{background:linear-gradient(0deg,rgba(60,4,9,.94) 0%,rgba(60,4,9,.55) 55%,rgba(60,4,9,.2) 100%),url(../img/dh-820.webp) 50% 30%/cover no-repeat;justify-content:flex-end}
 .el-wiz-mapa .mz::after{display:none}
-.sch-ryn{max-width:40%}
-.sch-ryn{transform:translate(-88%,-50%)}
-.sch-ryn::before{left:88%}
 .ph:not(.ph-foto)::after{right:-70px}
 @media (max-width:760px){
   .ph:not(.ph-foto)::after{width:46px;right:14px;top:14px}
@@ -1186,6 +1132,131 @@ body.ck-on .mob{transform:translateY(110%)!important}
   .hero-co a{padding-block:5px}
   .hero-cta{margin-top:22px}
 }
-.sch-ryn{transform:translate(-90%,calc(-100% + 4px));padding:0 0 14px}
-.sch-ryn::before{top:auto;bottom:0;left:90%}
 @media (min-width:1500px){.hero{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.hero h1{max-width:16ch;margin-right:0}}
+
+/* =================== v3.1 (06.11): menu, mapa Google, lista placówek, intro Eleganzy, stopka =================== */
+a,button{-webkit-tap-highlight-color:transparent}
+/* menu desktop: rozwijane bary */
+.menu-gr{position:relative;display:flex}
+.menu a.nav-rodzic{border-color:var(--or)}
+.menu-dd{position:absolute;left:-16px;top:100%;min-width:210px;padding:10px 0;background:#fff;border:1px solid var(--linia);box-shadow:6px 6px 0 var(--grafit);display:none;flex-direction:column;z-index:5}
+.menu-gr:hover .menu-dd,.menu-gr:focus-within .menu-dd{display:flex}
+.menu-dd a{padding:9px 16px!important;border:0!important;font-weight:600}
+.menu-dd a:hover,.menu-dd a[aria-current]{background:var(--szar);color:var(--or-d)}
+/* menu mobilne: sekcje z motywem skrzydła, Eleganza we własnym stylu */
+.panel{position:fixed;inset:var(--top) 0 0 0;z-index:49;background:var(--biel);padding:16px 16px calc(24px + env(safe-area-inset-bottom));overflow:auto;overscroll-behavior:contain}
+.panel[hidden]{display:none}
+.panel-el{display:flex;align-items:center;gap:14px;padding:16px;background:var(--bordo);color:#fff;text-decoration:none}
+.panel-el .kafel{width:42px;height:42px;background:#fff;box-shadow:3px 3px 0 #000}
+.panel-el .kafel::before{background:var(--bordo)}
+.panel-el b{display:block;font:400 24px/1.1 var(--f-el)}
+.panel-el small{display:block;font-size:13px;color:rgba(255,255,255,.78);margin-top:3px}
+.panel-el[aria-current]{box-shadow:inset 4px 0 0 #fff}
+.panel-tyt{display:flex;align-items:center;gap:10px;margin:22px 0 4px;font:700 13px/1 var(--f-b);letter-spacing:.1em;text-transform:uppercase;color:var(--or-d)}
+.panel-tyt .skrz{width:16px;height:19px}
+.panel-glowne{display:flex;flex-direction:column;border-top:2px solid var(--ink)}
+.panel-glowne>a{display:flex;justify-content:space-between;align-items:center;text-decoration:none;font:700 18px/1.3 var(--f-b);font-stretch:104%;padding:13px 0;border-bottom:1px solid var(--linia)}
+.panel-glowne>a::after{content:"→";font-weight:500;color:#b3b6ba}
+.panel-glowne a[aria-current],.panel-grupa a[aria-current]{color:var(--or-d)}
+.panel-glowne>a[aria-current]{box-shadow:inset 4px 0 0 var(--or);padding-left:12px;background:linear-gradient(90deg,var(--or-j),rgba(253,233,220,0))}
+.panel-glowne>a[aria-current]::after{color:var(--or-d)}
+.panel-glowne>a.nav-rodzic{color:var(--or-d)}
+.panel-sub{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 0 12px;border-bottom:1px solid var(--linia)}
+.panel-sub a{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--szar);text-decoration:none;font-weight:600;font-size:15px}
+.panel-sub a::before{content:"";width:12px;height:5px;background:var(--or);transform:skewY(-27deg)}
+.panel-sub a[aria-current]{background:var(--ink);color:#fff}
+.panel-grupa{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;border-top:2px solid var(--ink)}
+.panel-grupa a{text-decoration:none;font-weight:600;font-size:16px;padding:11px 0;border-bottom:1px solid var(--linia)}
+.panel-kontakt{margin-top:22px}
+.panel-kontakt .btn{width:100%}
+.panel-kontakt p{margin-top:12px;font-size:14px;color:var(--szary)}
+.panel-kontakt p a{color:var(--ink);font-weight:700}
+@media (hover:hover){.panel-glowne>a:hover,.panel-grupa a:hover{color:var(--or-d)}}
+
+/* mapa wszystkich placówek: Google My Maps, przed zgodą zaproszenie na tle zdjęcia DH */
+#mapa{height:min(640px,calc(100svh - var(--top) - 40px));min-height:440px}
+[data-mapa] .mz-all{background:linear-gradient(0deg,rgba(20,20,19,.92) 0%,rgba(20,20,19,.6) 50%,rgba(20,20,19,.25) 100%),url(../img/dh-820.webp) 50% 25%/cover no-repeat;justify-content:flex-end}
+[data-mapa] .mz-all::after{display:none}
+[data-mapa] .mz-k{display:flex;align-items:center;gap:10px;margin:0 0 4px;font:700 13px/1 var(--f-b);letter-spacing:.1em;text-transform:uppercase;color:var(--or)}
+[data-mapa] .mz-k::before{content:"";width:16px;height:19px;background:var(--or);-webkit-mask:var(--skrz) center/contain no-repeat;mask:var(--skrz) center/contain no-repeat}
+[data-mapa] .mz-all .mz-a{max-width:34rem}
+/* lista placówek: karty */
+.lista{border-top:0;display:flex;flex-direction:column;gap:10px}
+.pl{grid-template-columns:104px minmax(0,1fr);gap:20px;padding:14px;border:1px solid var(--linia);background:#fff;transition:border-color .15s,box-shadow .15s}
+.pl:hover{border-color:#c9ccd0}
+.pl.pl-akt{margin:0;padding:14px;background:#fff;border-color:var(--ink);box-shadow:inset 5px 0 0 var(--or),5px 5px 0 var(--grafit)}
+.pl-foto-a,.pl-foto{width:104px;height:104px}
+.pl-foto{border-radius:12px}
+.pl .pl-rodzaj::before{content:"";display:inline-block;width:11px;height:5px;margin-right:8px;background:var(--or);transform:skewY(-27deg) translateY(-3px)}
+.pl h3{font-size:19px}
+.pl-akcje{gap:8px;margin-top:12px}
+.pl-akcje a,.pl-akcje button{padding:7px 12px;border:1.5px solid var(--linia);font-size:14px;line-height:1.2}
+.pl-akcje a:hover,.pl-akcje button:hover{border-color:var(--ink)}
+.pl-akcje .tel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pl-akcje .tel:hover{background:#000}
+.godz{border-top:1px solid var(--linia);padding-top:10px}
+
+/* Eleganza: świat dobrych ubrań - tekst i dyptyk w równej siatce jak w magazynie */
+.el-o{background:#fff;padding:clamp(80px,9vw,140px) 0}
+.el-o-uklad{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(40px,6vw,104px);align-items:center}
+.el-o-duzy{margin-top:28px;font:400 clamp(21px,1.7vw,26px)/1.45 var(--f-el);color:var(--el-tekst)}
+.el-o-tekst>p:not(.el-o-duzy){margin-top:18px;color:var(--el-szary)}
+.el-o-link{display:inline-block;margin-top:30px;color:var(--bordo);font:600 13px/1 var(--f-b);letter-spacing:.18em;text-transform:uppercase;text-decoration:none;padding-bottom:8px;border-bottom:1px solid var(--bordo)}
+.el-o-dyptyk{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.6vw,24px);padding:clamp(12px,1.6vw,24px);border:1px solid var(--el-linia)}
+.el-o-dyptyk figure{margin:0}
+.el-o-dyptyk img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 25%}
+.el-o-dyptyk figcaption{margin-top:12px;font:italic 400 16px/1.35 var(--f-el);color:var(--el-szary)}
+
+/* aktualności baru */
+.bar-akt{background:#fff}
+.bar-akt-uklad{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(32px,5vw,80px);align-items:start}
+.bar-akt-tresc{margin-top:0;font-size:17px}
+
+@media (max-width:1060px){
+  .el-o-uklad{grid-template-columns:minmax(0,1fr)}
+  .bar-akt-uklad{grid-template-columns:minmax(0,1fr);gap:0}
+  #mapa{height:440px;min-height:0}
+}
+@media (max-width:760px){
+  #mapa{height:380px}
+  .pl{grid-template-columns:80px minmax(0,1fr);gap:14px;padding:12px}
+  .pl.pl-akt{padding:12px;box-shadow:inset 5px 0 0 var(--or),3px 3px 0 var(--grafit)}
+  .pl-foto-a,.pl-foto{width:80px;height:80px}
+  .pl h3{font-size:17.5px}
+  .pl-akcje a,.pl-akcje button{padding:7px 10px;font-size:13.5px}
+  .el-o{padding:64px 0}
+  .el-o-duzy{font-size:20px;margin-top:20px}
+  .el-o-dyptyk{gap:8px;padding:8px}
+  .el-o-dyptyk img{aspect-ratio:2/3}
+  .el-o-dyptyk figcaption{font-size:14px;margin-top:8px;padding:0 2px}
+  /* stopka na telefonie: zwarta */
+  .stopka{padding-top:40px}
+  .st-gora{gap:26px 16px;padding-bottom:26px}
+  .stopka h2{margin:0 0 8px}
+  .stopka li a{font-size:14.5px;padding:3px 0}
+  .st-adres{margin-top:12px;line-height:1.6;font-size:14.5px}
+  .st-gora>div:last-child ul{gap:0 18px}
+  .st-dol{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;padding:18px 0 calc(84px + env(safe-area-inset-bottom));align-items:start}
+  .st-dol p{display:contents}
+  .st-prawne>span{grid-column:1/-1}
+  .st-prawne>*+*::before{display:none}
+  .st-wyk-p{grid-column:1/-1}
+  .st-cookies{text-align:left}
+}
+@media (max-width:760px){
+  .pl-tresc{display:contents}
+  .pl-tresc>*:not(.pl-akcje):not(.godz){grid-column:2}
+  .pl-akcje{grid-column:1/-1;display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:6px;margin-top:4px}
+  .pl-akcje a,.pl-akcje button{text-align:center;padding:9px 4px;white-space:nowrap}
+  .godz{grid-column:1/-1}
+  .pl-foto-a{grid-row:1/span 4}
+}
+/* aktualność: motyw skrzydła przy tytule */
+.art h1::before{content:"";display:block;width:26px;height:31px;margin:0 0 14px;background:var(--or);-webkit-mask:var(--skrz) left center/contain no-repeat;mask:var(--skrz) left center/contain no-repeat}
+.art-meta{padding-bottom:18px;border-bottom:2px solid var(--ink)}
+@media (max-width:760px){.daty{columns:2;column-gap:14px}.daty li{break-inside:avoid;font-size:14.5px;padding-left:22px}.daty li::before{width:11px}}
+.el .el-wiz-mapa[data-mapa] .mz{background:linear-gradient(0deg,rgba(60,4,9,.95) 0%,rgba(60,4,9,.55) 50%,rgba(60,4,9,.15) 100%),url(../img/dh-820.webp) 50% 30%/cover no-repeat;justify-content:flex-end}
+.el .el-wiz-mapa[data-mapa] .mz::after{display:none}
+.akt>span:empty{display:block;aspect-ratio:4/3;background:var(--szar);position:relative;overflow:hidden}
+.akt>span:empty::after{content:"";position:absolute;right:-8%;bottom:-14%;width:62%;aspect-ratio:510/610;background:var(--or);opacity:.85;-webkit-mask:var(--skrz) center/contain no-repeat;mask:var(--skrz) center/contain no-repeat}
+@media (max-width:760px){.akt>span:empty{display:none}}
