@@ -163,7 +163,6 @@
       else if (o) o.remove();
     });
     var pi = $('#pustoInfo'); if (pi) pi.hidden = widac > 0;
-    if (mapa) rysujMarkery();
   }
   if (lista) {
     lista.addEventListener('click', function (e) {
@@ -190,67 +189,55 @@
         gb.classList.add('on'); filtruj();
         var n = D.pl.slice().sort(function (a, b) { return km(poz, a) - km(poz, b); })[0];
         gi.textContent = 'Najbliżej: ' + n.n + ', ' + fOdl(km(poz, n)) + '. Lista posortowana od najbliższej placówki. Kliknij ponownie, żeby wyłączyć.';
-        if (mapa) mapa.setView([n.lat, n.lng], 14);
+        if (mapa) ustawMape(mapa, n.id);
       }, function () { gi.textContent = 'Bez dostępu do lokalizacji pokazujemy listę w zwykłej kolejności.'; }, { timeout: 10000, maximumAge: 300000 });
     });
   }
 
-  /* ---------- mapa (Leaflet wczytywany dopiero przy przewinięciu) ---------- */
-  var mapa = null, markery = {}, lfLaduje = null;
-  function wczytajLeaflet() {
-    if (window.L) return Promise.resolve();
-    if (lfLaduje) return lfLaduje;
-    lfLaduje = new Promise(function (ok, bl) {
-      var c = document.createElement('link'); c.rel = 'stylesheet'; c.href = ROOT + 'assets/vendor/leaflet/leaflet.css'; document.head.appendChild(c);
-      var s = document.createElement('script'); s.src = ROOT + 'assets/vendor/leaflet/leaflet.js'; s.onload = ok; s.onerror = bl; document.head.appendChild(s);
-    });
-    return lfLaduje;
-  }
-  function ikona(p, otw, akt) {
-    var dh = p.typ === 'dh';
-    return L.divIcon({ className: '', iconSize: dh ? [38, 38] : [26, 26], iconAnchor: dh ? [19, 19] : [13, 13],
-      html: '<div class="pin' + (dh ? ' dh' : '') + (p.typ === 'bar' ? ' bar' : '') + (otw ? '' : ' zamk') + (akt ? ' pin-akt' : '') + '"></div>' });
-  }
-  function rysujMarkery() {
-    D.pl.forEach(function (p) {
-      var li = lista && document.getElementById('pl-' + p.id), widac = !li || !li.hidden;
-      var s = status(p.g);
-      if (!widac) { if (markery[p.id]) { mapa.removeLayer(markery[p.id]); delete markery[p.id]; } return; }
-      if (!markery[p.id]) {
-        markery[p.id] = L.marker([p.lat, p.lng], { icon: ikona(p, s.otw), title: p.n, zIndexOffset: p.typ === 'dh' ? 500 : 0 }).addTo(mapa);
-        markery[p.id].on('click', function () { var el = document.getElementById('pl-' + p.id); $$('.pl.pl-akt').forEach(function (x) { x.classList.remove('pl-akt'); }); if (el) { el.classList.add('pl-akt'); } });
-      }
-      markery[p.id].setIcon(ikona(p, s.otw)).bindPopup('<b>' + p.n + '</b><br>' + s.txt + '<br><a href="' + (/^https?:/.test(p.u) ? p.u : ROOT + p.u) + '">Godziny i dojazd</a>');
-    });
-  }
-  function dopasuj() {
-    if (!mapa || !window.L) return;
-    var pts = Object.keys(markery).map(function (k) { return markery[k].getLatLng(); });
-    if (pts.length) mapa.fitBounds(L.latLngBounds(pts).pad(0.12), { maxZoom: 15 });
+  /* ---------- mapy Google (osadzone, bez klucza; ładowane po wejściu w widok) ---------- */
+  var mapa = null;
+  function gUrl(p) { return 'https://maps.google.com/maps?q=' + encodeURIComponent(p.q) + '&z=16&hl=pl&output=embed'; }
+  function ustawMape(el, id) {
+    var p = PL[id]; if (!p) return;
+    var f = el.querySelector('iframe');
+    if (!f) { el.innerHTML = ''; f = document.createElement('iframe'); f.setAttribute('loading', 'lazy'); f.setAttribute('referrerpolicy', 'no-referrer-when-downgrade'); f.setAttribute('allowfullscreen', ''); el.appendChild(f); }
+    f.title = 'Mapa Google: ' + p.nz; f.src = gUrl(p); el.setAttribute('data-akt', id);
+    if (el.id === 'mapa') {
+      var c = $('#mapaPodpis');
+      if (c) c.innerHTML = '<b>' + p.nz + '</b><span><a href="' + p.u + '">Godziny i dojazd</a><a href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.q) + '" target="_blank" rel="noopener">Wyznacz trasę</a></span>';
+      $$('.pl').forEach(function (x) { x.classList.toggle('pl-akt', x.dataset.id === id); });
+    }
   }
   function initMapa(el) {
-    wczytajLeaflet().then(function () {
-      var id = el.getAttribute('data-mapa');
-      var m = L.map(el, { scrollWheelZoom: false, attributionControl: true });
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(m);
-      m.attributionControl.setPrefix(false);
-      if (id === 'all') { mapa = m; rysujMarkery(); dopasuj(); }
-      else {
-        var p = PL[id]; if (!p) return;
-        L.marker([p.lat, p.lng], { icon: ikona(p, status(p.g).otw, true), title: p.n }).addTo(m);
-        m.setView([p.lat, p.lng], 16);
-      }
-    }).catch(function () {});
+    var id = el.getAttribute('data-mapa');
+    if (id === 'all') { mapa = el; var dh = D.pl.filter(function (p) { return p.typ === 'dh'; })[0] || D.pl[0]; id = el.getAttribute('data-akt') || dh.id; }
+    ustawMape(el, id);
   }
+  function dopasuj() {}
+  if (lista) lista.addEventListener('click', function (e) {
+    var b = e.target.closest('.na-mapie'); if (!b || !mapa) return;
+    var id = b.closest('.pl').dataset.id; ustawMape(mapa, id);
+    var r = mapa.getBoundingClientRect(); if (r.top < 0 || r.bottom > window.innerHeight) mapa.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
   var mapy = $$('[data-mapa]');
   if (mapy.length) {
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (en) {
         en.forEach(function (x) { if (x.isIntersecting) { io.unobserve(x.target); initMapa(x.target); } });
-      }, { rootMargin: '200px' });
+      }, { rootMargin: '300px' });
       mapy.forEach(function (m) { io.observe(m); });
     } else mapy.forEach(initMapa);
   }
+
+  /* ---------- licznik karuzeli kolekcji Eleganzy ---------- */
+  var lkU = $('#lk'), lkL = $('#lkLicznik');
+  if (lkU && lkL) {
+    var lkIle = $$('li', lkU).length;
+    var lkRys = function () { var w = lkU.firstElementChild ? lkU.firstElementChild.getBoundingClientRect().width + 12 : 1; lkL.textContent = Math.min(lkIle, Math.round(lkU.scrollLeft / w) + 1) + ' / ' + lkIle; };
+    lkU.addEventListener('scroll', function () { window.requestAnimationFrame(lkRys); }, { passive: true }); lkRys();
+  }
+  /* ---------- sekcje zwijane na telefonie, otwarte na komputerze ---------- */
+  $$('details.zw-mob').forEach(function (d) { if (window.matchMedia('(min-width: 761px)').matches) d.open = true; });
 
   /* ---------- skrócona lista placówek na telefonie (strona główna) ---------- */
   var lw = $('#listaWiecej'), ls = $('.lista-skrot');
@@ -383,9 +370,12 @@
     panel.addEventListener('click', function (e) { if (e.target.closest('a')) zamknij(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { zamknij(); burger.focus(); } });
   }
-  var mob = $('#mob'), cel = $('.hero-cta') || $('.elh-cta') || $('.ph-meta') || $('.ph h1') || $('.art h1');
+  var mob = $('#mob'), cel = $('.hero-cta') || $('.elx-cta') || $('.elh-cta') || $('.ph-meta') || $('.ph h1') || $('.art h1');
   if (mob && cel && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function (en) { mob.classList.toggle('widac', !en[0].isIntersecting && en[0].boundingClientRect.top < 0); }).observe(cel);
+    var zaCel = false, stopkaWidac = false, st = $('.stopka');
+    var rysujMob = function () { mob.classList.toggle('widac', zaCel && !stopkaWidac); document.body.classList.toggle('mob-on', zaCel && !stopkaWidac); };
+    new IntersectionObserver(function (en) { zaCel = !en[0].isIntersecting && en[0].boundingClientRect.top < 0; rysujMob(); }).observe(cel);
+    if (st) new IntersectionObserver(function (en) { stopkaWidac = en[0].isIntersecting; rysujMob(); }).observe(st);
   }
 
   /* ---------- start ---------- */

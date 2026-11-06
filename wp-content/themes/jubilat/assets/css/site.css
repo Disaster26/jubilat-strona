@@ -1073,3 +1073,124 @@ picture{display:block}
 .gaz-uklad.gaz-jedna{grid-template-columns:minmax(0,1fr)}
 .okazje-h{font-size:clamp(24px,2.4vw,32px);margin:0 0 6px}
 @media(min-width:1061px){.gaz-jedna .okazje-lista{grid-template-columns:repeat(6,minmax(0,1fr))}}
+
+/* =================== Runda 2 (07.11): Eleganza premium, Mapy Google, pasek mobilny, krótsza główna =================== */
+/* --- Eleganza: pierwszy ekran (edytorial) --- */
+.elx{position:relative;display:flex;align-items:flex-end;min-height:calc(100svh - var(--top));background:var(--bordo-d);color:#fff;overflow:hidden;isolation:isolate}
+.elx-foto{position:absolute;inset:0;z-index:-2}
+.elx-foto img{width:100%;height:100%;object-fit:cover;object-position:60% 42%}
+.elx::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(38,3,7,.88) 0%,rgba(38,3,7,.62) 30%,rgba(38,3,7,.08) 58%,rgba(38,3,7,0) 70%),linear-gradient(0deg,rgba(38,3,7,.55) 0%,rgba(38,3,7,0) 38%)}
+.elx-in{width:min(var(--wrap),100% - 48px);margin:0 auto;padding:72px 0 clamp(56px,10vh,120px)}
+.elx-in>*{max-width:520px}
+.elx-logo{margin:0;line-height:0}
+.elx-logo img{width:clamp(150px,13vw,210px);height:auto}
+.elx-haslo{margin:clamp(28px,4vh,44px) 0 0;font:400 clamp(42px,4.6vw,74px)/1.02 var(--f-el);letter-spacing:-.012em;color:#fff}
+.elx-lead{margin-top:20px;font-size:17.5px;line-height:1.55;color:rgba(255,255,255,.84);max-width:40ch}
+.elx-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 30px;margin-top:34px}
+.elx-btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 34px;background:#fff;color:var(--bordo);font:600 13.5px/1 var(--f-b);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-radius:0;transition:background .2s,color .2s}
+.elx-btn:hover{background:var(--el-jasny)}
+.elx-link{color:#fff;font:600 13.5px/1 var(--f-b);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.55)}
+.elx-link:hover{border-color:#fff}
+.elx-teraz{margin-top:26px;font-size:14px;color:rgba(255,255,255,.78)}
+.elx-teraz:empty{display:none}
+@media(max-width:760px){
+  .elx{display:block;min-height:0}
+  .elx::before{display:none}
+  .elx-foto{position:relative;display:block;height:max(250px,calc(100svh - var(--top) - 318px));z-index:0}
+  .elx-foto::after{content:"";position:absolute;inset:auto 0 0;height:42%;background:linear-gradient(180deg,rgba(63,4,10,0),var(--bordo-d))}
+  .elx-foto img{position:absolute;inset:0;object-position:50% 30%}
+  .elx-in{position:relative;width:auto;margin:-58px 0 0;padding:0 20px 26px;background:linear-gradient(180deg,transparent 0,var(--bordo-d) 58px)}
+  .elx-logo img{width:124px}
+  .elx-haslo{margin-top:14px;font-size:clamp(30px,8.6vw,38px);line-height:1.04}
+  .elx-lead{margin-top:10px;font-size:15.5px}
+  .elx-cta{margin-top:18px;gap:12px 22px;flex-wrap:nowrap}
+  .elx-btn{min-height:50px;padding:0 22px;flex:0 0 auto;letter-spacing:.12em;font-size:12.5px}
+  .elx-link{letter-spacing:.12em;font-size:12.5px;white-space:nowrap}
+  .elx-teraz{margin-top:14px;font-size:13.5px}
+}
+@media(max-width:760px) and (max-height:700px){.elx-lead{display:none}.elx-foto{height:max(220px,calc(100svh - var(--top) - 262px))}}
+/* intro salonu: zdjęcie węższe, z oddechem */
+.el-o-foto{max-width:420px;justify-self:end}
+@media(max-width:760px){.el-o-foto{max-width:none;width:78%;margin:8px 0 0 auto}}
+/* kolekcja: karuzela na telefonie (przesuwanie palcem), siatka na komputerze */
+.lk-glowa-strz{display:none}
+@media(max-width:760px){
+  .lk-glowa-strz{display:flex;align-items:center;justify-content:space-between;margin:-8px 0 14px}
+  .lk-licznik{font:400 15px/1 var(--f-el);color:var(--el-szary);letter-spacing:.06em}
+  .lk{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:76%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-right:-16px;padding-right:16px;overscroll-behavior-x:contain}
+  .lk::-webkit-scrollbar{display:none}
+  .lk-k{scroll-snap-align:start}
+  .lk-duzy{grid-column:auto;grid-row:auto}
+  .lk-duzy button,.lk-duzy img{height:auto}
+  .lk-duzy img{aspect-ratio:2/3}
+  .lk-duzy figure{display:block}
+}
+/* wizyta: mapa zamiast powtórzonego zdjęcia */
+.el-wiz-mapa{margin:0;height:clamp(300px,34vw,440px);border:0}
+/* --- Mapy Google --- */
+#mapa iframe,.mapa-mini iframe{display:block;width:100%;height:100%;border:0}
+.mapa-box{display:flex;flex-direction:column}
+#mapa{position:relative;flex:1 1 auto}
+.mapa-podpis{margin:0;padding:12px 14px;background:var(--biel);border-top:1px solid var(--linia);font-size:14.5px;display:flex;flex-wrap:wrap;gap:4px 16px;justify-content:space-between;align-items:baseline}
+.mapa-podpis:empty{display:none}
+.mapa-podpis span{display:flex;gap:16px}
+.mapa-podpis a{color:var(--ink);font-weight:600}
+.pl.pl-akt{box-shadow:inset 3px 0 0 var(--or)}
+.pl.pl-akt h3 a{color:var(--or-d)}
+/* --- pasek mobilny nie zasłania treści --- */
+@media(max-width:760px){
+  body.mob-on main{padding-bottom:0}
+  .stopka{padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+  main{padding-bottom:0}
+  body{padding-bottom:0}
+}
+/* --- stopka na telefonie: zwarta --- */
+@media(max-width:760px){
+  .st-gora>div:last-child ul{display:flex;flex-wrap:wrap;gap:0 20px}
+  .stopka{padding-top:44px}
+  .st-dol{margin-top:28px}
+  .st-dol p{flex-direction:column;gap:6px}
+}
+/* --- strona główna krótsza na telefonie --- */
+@media(max-width:760px){
+  .dh-home .pietra .p-tresc p:not(.p-haslo){display:none}
+  .dh-home .pietra li{padding-top:18px;padding-bottom:18px}
+  .bary-home .bary-uklad{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:86%;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-right:-16px;padding-right:16px}
+  .bary-home .bary-uklad::-webkit-scrollbar{display:none}
+  .bary-home .bar{scroll-snap-align:start}
+  .akt-home .wyn-foto{display:none}
+  .akt-home .akt-lista li:nth-child(n+3){display:none}
+  .kontakt-home{display:none}
+}
+/* sekcje zwijane (rabaty) */
+details.zw-mob{border-bottom:1px solid #d9d6d0}
+details.zw-mob summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0}
+details.zw-mob summary::-webkit-details-marker{display:none}
+details.zw-mob summary h3{margin:0!important}
+details.zw-mob summary::after{content:"+";font:400 24px/1 var(--f-b);color:var(--szary)}
+details.zw-mob[open] summary::after{content:"−"}
+details.zw-mob>p{margin:0 0 14px}
+@media(min-width:761px){details.zw-mob{border:0}details.zw-mob summary{pointer-events:none;padding:0 0 10px}details.zw-mob summary::after{display:none}details.zw-mob+details.zw-mob{margin-top:30px}}
+/* =================== Idea marki =================== */
+/* Jubilat: skrzydełko ze znaku (czapka Merkurego) w kolorze logo, konsekwentnie przy nagłówkach i jako znak wodny */
+body:not(.el) .sek-glowa h2::before,body:not(.el) .ph h1::before,body:not(.el) .faq h2::before,body:not(.el) .kontakt h2::before,body:not(.el) .hist-intro h2::before,body:not(.el) .wyn-teaser>h2:first-of-type::before,body:not(.el) .app-tekst>h2::before{content:"";display:block;width:.62em;height:.74em;margin:0 0 .32em;background:var(--or);-webkit-mask:url(../img/skrzydlo.svg) left center/contain no-repeat;mask:url(../img/skrzydlo.svg) left center/contain no-repeat}
+body:not(.el) .ph h1::before{width:26px;height:31px;margin-bottom:14px}
+.dh-home,.historia,.stopka{position:relative;overflow:hidden}
+.dh-home::after,.historia::after,.stopka::after{content:"";position:absolute;pointer-events:none;z-index:0;background:currentColor;-webkit-mask:url(../img/skrzydlo.svg) center/contain no-repeat;mask:url(../img/skrzydlo.svg) center/contain no-repeat}
+.dh-home::after{width:min(520px,60vw);aspect-ratio:510/610;right:-6%;top:40px;color:var(--or);opacity:.07}
+.historia::after{width:min(420px,55vw);aspect-ratio:510/610;right:-4%;bottom:-60px;color:var(--ink);opacity:.045}
+.stopka::after{width:300px;aspect-ratio:510/610;right:-50px;bottom:-40px;color:#fff;opacity:.04}
+.dh-home .wrap,.historia .wrap,.stopka .wrap{position:relative;z-index:1}
+.hero-adres{color:var(--or-d)}
+/* Eleganza: znak E z logo - przy nagłówkach, na liście działów i jako znak wodny butiku */
+.el-glowa h2::before,.el-o-tekst h2::before,.el-wiz h2::before,.el .faq h2::before,.el .kontakt h2::before{content:"";display:block;width:.56em;height:.74em;margin:0 0 .36em;background:var(--bordo);-webkit-mask:url(../img/eleganza-znak-maska.png) left center/contain no-repeat;mask:url(../img/eleganza-znak-maska.png) left center/contain no-repeat}
+.el-marki .el-glowa h2::before{background:#fff}
+.el-pietra li{display:flex;align-items:center;gap:12px}
+.el-pietra li::before{content:"";flex:0 0 auto;width:10px;height:13px;background:var(--bordo);-webkit-mask:url(../img/eleganza-znak-maska.png) center/contain no-repeat;mask:url(../img/eleganza-znak-maska.png) center/contain no-repeat}
+.el-marki,.el-kol{position:relative;overflow:hidden}
+.el-marki::after,.el-kol::after{content:"";position:absolute;pointer-events:none;-webkit-mask:url(../img/eleganza-znak-maska.png) center/contain no-repeat;mask:url(../img/eleganza-znak-maska.png) center/contain no-repeat}
+.el-marki::after{width:min(560px,70vw);aspect-ratio:183/242;right:-8%;top:-60px;background:#fff;opacity:.05}
+.el-kol::after{width:min(420px,60vw);aspect-ratio:183/242;left:-120px;bottom:-80px;background:var(--bordo);opacity:.045}
+.el-marki .el-wrap,.el-kol .el-wrap{position:relative;z-index:1}
+@media(max-width:760px){.elx-cta{flex-wrap:wrap}}
+@media(max-width:350px){.elx-btn{flex:1 1 100%}}
