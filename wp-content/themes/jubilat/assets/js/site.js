@@ -337,7 +337,7 @@
     if (!zgMapy()) { zaslepkaAll(el, p); podpis(el, p, false); return; }
     if (GK) { apiMapa(el, id); podpis(el, p, false); return; }
     if (p) { iframe(el, gUrl(p), 'Mapa Google: ' + p.nz); el.setAttribute('data-tryb', 'jedna'); podpis(el, p, true); return; }
-    if (MM) { iframe(el, MM, 'Mapa Google: wszystkie placówki Jubilat'); el.setAttribute('data-tryb', 'mymaps'); podpis(el, null); return; }
+    if (MM) { iframe(el, MM + (/[?&](z|ll)=/.test(MM) || MM.indexOf('/maps/d/') < 0 ? '' : '&ll=50.075,19.885&z=' + (el.clientWidth < 560 ? 11 : 12)), 'Mapa Google: wszystkie placówki Jubilat'); el.setAttribute('data-tryb', 'mymaps'); podpis(el, null); return; }
     /* bez klucza i bez My Maps: Mapa Google z wynikami wyszukiwania sklepów Jubilat w Krakowie (działa bez uprawnień) */
     iframe(el, 'https://maps.google.com/maps?q=' + encodeURIComponent('Jubilat sklep spożywczo-przemysłowy Kraków') + '&ll=50.075,19.89&z=' + (el.clientWidth < 560 ? 11 : 12) + '&hl=pl&output=embed', 'Mapa Google: sklepy Jubilat w Krakowie');
     el.setAttribute('data-tryb', 'wyszukiwanie'); podpis(el, null);

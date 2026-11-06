@@ -1326,3 +1326,11 @@ a,button{-webkit-tap-highlight-color:transparent}
 }
 @media (max-width:760px) and (max-height:700px){.ph-foto .ph-lead{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
 @media (max-width:760px){.menu-karta .menu-t li.dzisiaj .md::after{display:none}}
+/* My Maps: pasek z tytułem mapy i avatarem schowany (67 px), na telefonie przycięta też dublująca się atrybucja - jedna, czytelna pod mapą */
+#mapa[data-tryb="mymaps"] iframe{top:-67px;height:calc(100% + 67px)}
+.mapa-atr{display:none;margin:0;padding:6px 12px;background:#fff;color:#5f6368;font-size:11.5px;text-align:right;border-top:1px solid var(--linia)}
+.mapa-atr a{color:#5f6368}
+@media (max-width:760px){
+  #mapa[data-tryb="mymaps"] iframe{height:calc(100% + 67px + 24px)}
+  #mapa[data-tryb="mymaps"]+.mapa-atr{display:block}
+}
