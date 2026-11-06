@@ -1247,3 +1247,107 @@ body.ck-on .mob{transform:translateY(110%)!important}
   .ck-ust{max-height:42svh;overflow:auto}
 }
 [data-mapa] .mz-pokaz{white-space:normal;text-align:left;line-height:1.25;padding:10px 18px}
+
+/* =================== Runda 3 (07.11) =================== */
+/* Eleganza na stronie głównej: edytorial jak na podstronie salonu */
+.el-baner{display:none}
+.elb{position:relative;display:flex;align-items:center;min-height:min(86vh,760px);background:var(--bordo-d);color:#fff;overflow:hidden;isolation:isolate}
+.elb-foto{position:absolute;inset:0;z-index:-2}
+.elb-foto img{width:100%;height:100%;object-fit:cover;object-position:62% 45%}
+.elb::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(38,3,7,.9) 0%,rgba(38,3,7,.66) 32%,rgba(38,3,7,.06) 60%,rgba(38,3,7,0) 72%)}
+.elb::after{content:"";position:absolute;z-index:-1;right:clamp(24px,4vw,64px);bottom:clamp(24px,4vw,56px);width:52px;height:68px;background:#fff;opacity:.85;-webkit-mask:url(../img/eleganza-znak-maska.png) center/contain no-repeat;mask:url(../img/eleganza-znak-maska.png) center/contain no-repeat}
+.elb-in{width:min(var(--wrap),100% - 48px);margin:0 auto;padding:clamp(64px,8vw,110px) 0}
+.elb-in>*{max-width:500px}
+.elb-logo{width:clamp(150px,12vw,196px);height:auto;display:block}
+.elb h2{margin:clamp(24px,3vh,38px) 0 0;font:400 clamp(38px,4vw,62px)/1.04 var(--f-el);letter-spacing:-.01em;color:#fff}
+.elb-lead{margin-top:18px;font-size:17px;line-height:1.55;color:rgba(255,255,255,.84);max-width:40ch}
+.elb-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;margin-top:30px}
+.elb-godz{font-size:14px;color:rgba(255,255,255,.7)}
+@media(max-width:760px){
+  .elb{display:block;min-height:0}
+  .elb::before{display:none}
+  .elb::after{right:20px;bottom:auto;top:calc(min(118vw,62svh) - 76px);width:34px;height:45px;opacity:.9}
+  .elb-foto{position:relative;display:block;height:min(118vw,62svh);z-index:0}
+  .elb-foto::after{content:"";position:absolute;inset:auto 0 0;height:40%;background:linear-gradient(180deg,rgba(63,4,10,0),var(--bordo-d))}
+  .elb-foto img{position:absolute;inset:0;object-position:50% 30%}
+  .elb-in{width:auto;margin:-40px 0 0;position:relative;padding:0 20px 44px}
+  .elb-logo{width:118px}
+  .elb h2{margin-top:14px;font-size:clamp(30px,8.4vw,36px)}
+  .elb-lead{font-size:15.5px;margin-top:10px}
+  .elb-cta{margin-top:20px;flex-direction:column;align-items:flex-start;gap:12px}
+}
+/* Strona główna: cała bryła Domu Handlowego z neonem JUBILAT, dół zdjęcia ścięty jak belka skrzydełka */
+.hero-foto img{object-position:52% 18%}
+@media(min-width:761px){.hero-foto{clip-path:polygon(7% 0,100% 0,100% 100%,0 100%)}}
+@media(max-width:760px){
+  .hero-foto{min-height:min(62vw,34svh);max-height:46svh;clip-path:polygon(0 0,100% 0,100% 100%,0 calc(100% - 22px))}
+  .hero-foto img{object-position:50% 6%}
+}
+/* Stopka od nowa: siatka kolumn, dolny pasek w jednej linii */
+.stopka::after{display:none}
+.stopka{padding:clamp(56px,6vw,84px) 0 0}
+.st-gora{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:40px 48px;padding-bottom:clamp(40px,5vw,64px)}
+.st-gora h2{margin:6px 0 14px}
+.stopka li a{padding:4px 0;line-height:1.5}
+.st-dol{margin:0;padding:22px 0 26px;border-top:1px solid #3a3836;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 32px;font-size:13.5px;color:#a8a49d}
+.st-dol p{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 0}
+.st-prawne>*+*::before{content:"·";margin:0 12px;color:#6d6a64;text-decoration:none;display:inline-block}
+.st-prawne a,.st-cookies{color:#a8a49d;text-decoration:none}
+.st-prawne a:hover,.st-cookies:hover,.st-wyk:hover{color:#fff;text-decoration:underline}
+.st-cookies{background:none;border:0;padding:0;font:inherit;cursor:pointer;text-align:left}
+.st-wyk{color:#a8a49d;text-decoration:none}
+@media(max-width:1060px){.st-gora{grid-template-columns:repeat(2,minmax(0,1fr))}.st-gora>div:first-child{grid-column:1/-1}}
+@media(max-width:760px){
+  .stopka{padding-top:48px}
+  .st-gora{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px 20px;padding-bottom:36px}
+  .st-gora>div:first-child,.st-gora>div:last-child{grid-column:1/-1}
+  .st-gora>div:last-child ul{display:flex;flex-wrap:wrap;gap:0 22px}
+  .stopka li a{font-size:15.5px;padding:5px 0}
+  .st-dol{flex-direction:column;align-items:flex-start;gap:14px;padding:22px 0 calc(24px + env(safe-area-inset-bottom))}
+  .st-prawne{flex-direction:column;align-items:flex-start!important;gap:10px!important}
+  .st-prawne>*+*::before{display:none}
+}
+
+/* =================== Projekt v2 (07.11): obrazy zawsze wtopione w układ =================== */
+/* Eleganza - "Świat dobrych ubrań": dyptyk zdjęć od krawędzi do krawędzi, tekst na jasnym tle salonu */
+.el-o{background:var(--el-jasny);padding:0;position:relative;overflow:hidden}
+.el-o-uklad{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;align-items:stretch;min-height:min(84vh,760px)}
+.el-o-tekst{display:flex;flex-direction:column;justify-content:center;padding:clamp(64px,8vw,120px) clamp(40px,6vw,96px) clamp(64px,8vw,120px) max(24px,calc((100vw - var(--wrap))/2))}
+.el-o-foto{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:none;width:auto;justify-self:stretch}
+.el-o-foto picture{display:block;position:relative;min-height:100%}
+.el-o-foto img{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;object-fit:cover;object-position:50% 25%}
+.el-o-foto picture+picture{border-left:4px solid var(--el-jasny)}
+@media(max-width:760px){
+  .el-o-uklad{grid-template-columns:minmax(0,1fr);min-height:0}
+  .el-o-tekst{padding:56px 20px 36px}
+  .el-o-foto{width:100%;margin:0;height:min(88vw,520px)}
+  .el-o-foto picture+picture{border-left-width:3px}
+}
+/* Jubilat - nagłówki podstron: jasne pasmo z dużym skrzydłem Merkurego zamiast pustki */
+body:not(.el) .ph:not(.ph-foto){position:relative;overflow:hidden;background:var(--szar);border-bottom:0}
+body:not(.el) .ph:not(.ph-foto)::after{content:"";position:absolute;top:50%;right:max(-40px,calc((100vw - var(--wrap))/2 - 120px));transform:translateY(-50%);width:clamp(220px,28vw,420px);aspect-ratio:510/610;background:var(--or);opacity:.13;-webkit-mask:url(../img/skrzydlo.svg) center/contain no-repeat;mask:url(../img/skrzydlo.svg) center/contain no-repeat;pointer-events:none}
+body:not(.el) .ph:not(.ph-foto)::before{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--or) 0,var(--or) 120px,transparent 120px)}
+body:not(.el) .ph:not(.ph-foto) .ph-in{position:relative;z-index:1}
+@media(max-width:760px){body:not(.el) .ph:not(.ph-foto)::after{width:170px;right:-36px;top:auto;bottom:-30px;transform:none;opacity:.1}}
+/* zdjęcie w nagłówku podstrony: ścięcie pod kątem belek skrzydła */
+@media(min-width:761px){.ph-foto figure{clip-path:polygon(9% 0,100% 0,100% 100%,0 100%)}}
+@media(max-width:760px){.ph-foto figure{clip-path:polygon(0 0,100% 0,100% 100%,0 calc(100% - 20px));height:min(62vw,34svh)}}
+/* zdjęcia w treści na telefonie: od krawędzi do krawędzi */
+@media(max-width:760px){
+  .wyn-foto,.app-plakat{margin-left:-16px!important;margin-right:-16px!important;width:calc(100% + 32px)!important;max-width:none!important}
+  .wyn-foto img,.app-plakat img{width:100%;height:auto}
+}
+/* okazje: pełne rzędy */
+@media(min-width:1101px){.okazje-siatka{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
+/* plakat aplikacji w pomarańczowym polu marki zamiast luźnego prostokąta */
+.app-plakat{margin:0;background:linear-gradient(160deg,#f08a32 0%,var(--or) 60%,var(--or-d) 100%);display:grid;place-items:center;padding:clamp(28px,4vw,56px);align-self:stretch;position:relative;overflow:hidden}
+.app-plakat::after{content:"";position:absolute;right:-60px;bottom:-60px;width:260px;aspect-ratio:510/610;background:#fff;opacity:.12;-webkit-mask:url(../img/skrzydlo.svg) center/contain no-repeat;mask:url(../img/skrzydlo.svg) center/contain no-repeat}
+.app-plakat picture,.app-plakat img{position:relative;z-index:1;max-width:min(360px,100%);box-shadow:0 18px 40px rgba(0,0,0,.25)}
+/* zaślepka mapy: kompozycja z motywem marki zamiast pustego pola */
+[data-mapa] .mz{justify-content:center;align-items:flex-start;overflow:hidden;background:var(--szar)}
+[data-mapa] .mz::after{content:"";position:absolute;right:-8%;bottom:-12%;width:min(62%,360px);aspect-ratio:510/610;background:var(--or);opacity:.1;-webkit-mask:url(../img/skrzydlo.svg) center/contain no-repeat;mask:url(../img/skrzydlo.svg) center/contain no-repeat;pointer-events:none}
+.el [data-mapa] .mz::after{background:var(--bordo);opacity:.07;-webkit-mask-image:url(../img/eleganza-znak-maska.png);mask-image:url(../img/eleganza-znak-maska.png);aspect-ratio:183/242}
+[data-mapa] .mz>*{position:relative;z-index:1}
+[data-mapa] .mz-n{font-size:clamp(22px,2.2vw,30px)}
+#mapa [data-mapa],#mapa .mz{min-height:100%}
+.app-plakat{max-width:none!important;justify-self:stretch!important}
