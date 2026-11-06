@@ -100,6 +100,11 @@
       if (info) info.hidden = widac;
       c.hidden = !widac;
     });
+    $$('[data-okazje-blok]').forEach(function (s) { s.hidden = !$$('.ok', s).some(function (b) { return !b.hidden; }); });
+    $$('[data-blok-sekcja]').forEach(function (s) {
+      var wid = $$('[data-blok]', s).filter(function (b) { return !b.hidden; });
+      s.hidden = !wid.length; var u = $('.gaz-uklad', s); if (u) u.classList.toggle('gaz-jedna', wid.length === 1);
+    });
     $$('.promocje').forEach(function (s) { s.hidden = !$$('.ban', s).some(function (b) { return !b.hidden; }); });
     $$('.kom').forEach(function (s) { s.hidden = !$$('p', s).some(function (b) { return !b.hidden; }); });
     $$('[data-gazetka]').forEach(function (el) {
@@ -129,6 +134,7 @@
       box.querySelector('.dzis-danie').textContent = sp[1].textContent;
       box.querySelector('.dzis-cena').textContent = sp[2].textContent;
     });
+    if (D.menu.do && DZIS > D.menu.do) $$('[data-menu-blok]').forEach(function (b) { b.hidden = true; });
     if (!wTyg) $$('[data-menu-info]').forEach(function (p) {
       if (DZIS > D.menu.do) p.textContent = 'To menu z poprzedniego tygodnia. Aktualne menu publikujemy na początku każdego tygodnia, zadzwoń, żeby zapytać o dzisiejsze dania.';
     });

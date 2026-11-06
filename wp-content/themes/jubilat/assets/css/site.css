@@ -1068,3 +1068,8 @@ picture{display:block}
 .promocje[hidden],.kom[hidden]{display:none}
 .lista-wiecej{display:none}
 @media(max-width:760px){.lista-skrot:not(.cala)>li:nth-child(n+5){display:none}.lista-wiecej{display:flex;width:100%;justify-content:center;margin-top:14px}.lista-wiecej[hidden]{display:none}.historia-skrot .os{display:none}}
+
+[data-menu-blok][hidden],[data-blok][hidden],[data-okazje-blok][hidden],[data-blok-sekcja][hidden]{display:none!important}
+.gaz-uklad.gaz-jedna{grid-template-columns:minmax(0,1fr)}
+.okazje-h{font-size:clamp(24px,2.4vw,32px);margin:0 0 6px}
+@media(min-width:1061px){.gaz-jedna .okazje-lista{grid-template-columns:repeat(6,minmax(0,1fr))}}
