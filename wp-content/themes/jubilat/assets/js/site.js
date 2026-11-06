@@ -197,22 +197,80 @@
   /* ---------- mapy Google (osadzone, bez klucza; ładowane po wejściu w widok) ---------- */
   var mapa = null;
   function gUrl(p) { return 'https://maps.google.com/maps?q=' + encodeURIComponent(p.q) + '&z=16&hl=pl&output=embed'; }
-  function ustawMape(el, id) {
-    var p = PL[id]; if (!p) return;
-    var f = el.querySelector('iframe');
-    if (!f) { el.innerHTML = ''; f = document.createElement('iframe'); f.setAttribute('loading', 'lazy'); f.setAttribute('referrerpolicy', 'no-referrer-when-downgrade'); f.setAttribute('allowfullscreen', ''); el.appendChild(f); }
-    f.title = 'Mapa Google: ' + p.nz; f.src = gUrl(p); el.setAttribute('data-akt', id);
-    if (el.id === 'mapa') {
-      var c = $('#mapaPodpis');
-      if (c) c.innerHTML = '<b>' + p.nz + '</b><span><a href="' + p.u + '">Godziny i dojazd</a><a href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.q) + '" target="_blank" rel="noopener">Wyznacz trasę</a></span>';
-      $$('.pl').forEach(function (x) { x.classList.toggle('pl-akt', x.dataset.id === id); });
+  /* ---------- zgoda na cookies (12 miesięcy, localStorage + cookie) ---------- */
+  var ZG_KLUCZ = 'jb_zgoda', ZG_DNI = 365;
+  function zgodaCzytaj() {
+    try { var z = JSON.parse(localStorage.getItem(ZG_KLUCZ) || 'null'); if (z && z.t && (Date.now() - z.t) < ZG_DNI * 864e5) return z; } catch (err) {}
+    var m = document.cookie.match(/(?:^|; )jb_zgoda=([^;]+)/); if (m) { var a = decodeURIComponent(m[1]).split('|'); return { mapy: a[0] === '1', stat: a[1] === '1', t: +a[2] || Date.now() }; }
+    return null;
+  }
+  function zgodaZapisz(z) {
+    z.t = Date.now(); z.v = 1;
+    try { localStorage.setItem(ZG_KLUCZ, JSON.stringify(z)); } catch (err) {}
+    document.cookie = 'jb_zgoda=' + encodeURIComponent((z.mapy ? '1' : '0') + '|' + (z.stat ? '1' : '0') + '|' + z.t) + '; max-age=' + (ZG_DNI * 86400) + '; path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+    ZGODA = z; zastosujZgode();
+  }
+  var ZGODA = zgodaCzytaj(), ck = $('#ck');
+  function zastosujZgode() {
+    $$('[data-mapa]').forEach(function (el) { if (ZGODA && ZGODA.mapy) { if (!el.querySelector('iframe') && el.getAttribute('data-widac') === '1') ustawMape(el, el.getAttribute('data-akt')); } else if (el.querySelector('iframe')) zaslepka(el, el.getAttribute('data-akt')); });
+    if (ZGODA && ZGODA.stat && ck && ck.getAttribute('data-ga4') && !window.gtag) {
+      var g = ck.getAttribute('data-ga4'), s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(g); document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || []; window.gtag = function () { window.dataLayer.push(arguments); }; window.gtag('js', new Date()); window.gtag('config', g);
     }
   }
-  function initMapa(el) {
+  function banerPokaz(ustawienia) {
+    if (!ck) return;
+    ck.hidden = false; document.body.classList.add('ck-on');
+    var u = $('#ckUst'), m = $('#ckMapy'), st = $('#ckStat');
+    if (m) m.checked = !!(ZGODA && ZGODA.mapy); if (st) st.checked = !!(ZGODA && ZGODA.stat);
+    u.hidden = !ustawienia; $('[data-ck="zapisz"]', ck).hidden = !ustawienia; $('[data-ck="ustawienia"]', ck).hidden = !!ustawienia;
+    $('[data-ck="ustawienia"]', ck).setAttribute('aria-expanded', String(!!ustawienia));
+  }
+  function banerZamknij() { if (ck) { ck.hidden = true; document.body.classList.remove('ck-on'); } }
+  if (ck) {
+    ck.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ck]'); if (!b) return;
+      var a = b.getAttribute('data-ck');
+      if (a === 'wszystkie') { zgodaZapisz({ mapy: true, stat: true }); banerZamknij(); }
+      else if (a === 'niezbedne') { zgodaZapisz({ mapy: false, stat: false }); banerZamknij(); }
+      else if (a === 'ustawienia') banerPokaz(true);
+      else if (a === 'zapisz') { var st = $('#ckStat'); zgodaZapisz({ mapy: $('#ckMapy').checked, stat: st ? st.checked : false }); banerZamknij(); }
+    });
+    if (!ZGODA) banerPokaz(false);
+  }
+  $$('[data-cookies-ustaw]').forEach(function (b) { b.addEventListener('click', function () { banerPokaz(true); }); });
+
+  /* ---------- mapy Google: wczytywane po wejściu w widok, tylko ze zgodą na usługi zewnętrzne ---------- */
+  function trasa(p) { return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.q); }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function zaslepka(el, id) {
+    var p = PL[id]; if (!p) return;
+    el.setAttribute('data-akt', id);
+    el.innerHTML = '<div class="mz"><span class="mz-znak" aria-hidden="true"></span><p class="mz-n">' + esc(p.nz) + '</p><p class="mz-a">' + esc(p.q.replace(p.nz + ', ', '')) + '</p>'
+      + '<div class="mz-akcje"><button type="button" class="mz-pokaz">Pokaż mapę (akceptuję cookies Google)</button><a class="mz-trasa" href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a></div></div>';
+    $('.mz-pokaz', el).addEventListener('click', function () { var z = ZGODA || { stat: false }; z.mapy = true; zgodaZapisz(z); banerZamknij(); ustawMape(el, id); });
+    podpis(el, p);
+  }
+  function podpis(el, p) {
+    if (el.id !== 'mapa') return;
+    var c = $('#mapaPodpis');
+    if (c) c.innerHTML = el.querySelector('iframe') ? '<b>' + esc(p.nz) + '</b><span><a href="' + p.u + '">Godziny i dojazd</a><a href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a></span>' : '';
+    $$('.pl').forEach(function (x) { x.classList.toggle('pl-akt', x.dataset.id === p.id); });
+  }
+  function ustawMape(el, id) {
+    var p = PL[id]; if (!p) return;
+    if (!(ZGODA && ZGODA.mapy)) { zaslepka(el, id); return; }
+    var f = el.querySelector('iframe');
+    if (!f) { el.innerHTML = ''; f = document.createElement('iframe'); f.setAttribute('referrerpolicy', 'no-referrer-when-downgrade'); f.setAttribute('allowfullscreen', ''); el.appendChild(f); }
+    f.title = 'Mapa Google: ' + p.nz; f.src = gUrl(p); el.setAttribute('data-akt', id);
+    podpis(el, p);
+  }
+  function startId(el) {
     var id = el.getAttribute('data-mapa');
     if (id === 'all') { mapa = el; var dh = D.pl.filter(function (p) { return p.typ === 'dh'; })[0] || D.pl[0]; id = el.getAttribute('data-akt') || dh.id; }
-    ustawMape(el, id);
+    return id;
   }
+  function initMapa(el) { el.setAttribute('data-widac', '1'); ustawMape(el, startId(el)); }
   function dopasuj() {}
   if (lista) lista.addEventListener('click', function (e) {
     var b = e.target.closest('.na-mapie'); if (!b || !mapa) return;
@@ -220,6 +278,7 @@
     var r = mapa.getBoundingClientRect(); if (r.top < 0 || r.bottom > window.innerHeight) mapa.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
   var mapy = $$('[data-mapa]');
+  mapy.forEach(function (el) { zaslepka(el, startId(el)); });
   if (mapy.length) {
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (en) {
@@ -228,6 +287,7 @@
       mapy.forEach(function (m) { io.observe(m); });
     } else mapy.forEach(initMapa);
   }
+  zastosujZgode();
 
   /* ---------- licznik karuzeli kolekcji Eleganzy ---------- */
   var lkU = $('#lk'), lkL = $('#lkLicznik');
