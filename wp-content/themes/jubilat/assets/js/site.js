@@ -660,6 +660,19 @@
     var mp = (location.search.match(/[?&]marka=([a-z0-9-]+)/) || [])[1];
     if (mp && $('[data-el-f="m:' + mp + '"]')) ustaw('m:' + mp);
   }
+  /* ---------- HOME & Beauty: logo marki po dotknięciu, na ekranach dotykowych samo co ok. 3 s ---------- */
+  $$('.prod-hb').forEach(function (k) { k.addEventListener('click', function () { k.classList.toggle('logo'); }); });
+  var hbK = $$('.prod-hb');
+  var hbHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+  var hbRuch = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (hbK.length && !hbHover && !hbRuch) {
+    var hbT = 0;
+    setInterval(function () {
+      if (document.hidden) return;
+      hbT++;
+      hbK.forEach(function (k, i) { k.classList.toggle('logo', (hbT + i) % 2 === 0); });
+    }, 3000);
+  }
   /* ---------- menu baru: zakładki dni (telefon), dziś otwarte domyślnie ---------- */
   $$('.menu-karta').forEach(function (k) {
     var tabs = $$('.menu-dni button', k), ul = $('.menu-t', k); if (!tabs.length || !ul) return;
