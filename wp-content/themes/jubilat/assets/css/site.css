@@ -1645,3 +1645,65 @@ html.okx-otwarty{overflow:hidden}
 @media (max-width:760px){.elb-marki{font-size:15.5px;margin-top:16px}.elb-marki a+a{margin-left:14px}}
 
 @media (hover:none){.elg-b .okk-lupa{opacity:.92}}
+
+/* ---------- Eleganza: karuzela marek, dyskretne marki pod zdjęciem, skład w przeglądarce ---------- */
+.elm-kar{margin:0 0 clamp(64px,7vw,104px)}
+.elm-kar .elm-siatka{margin:0;display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc((100% - 54px)/3.35);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;scroll-behavior:smooth}
+.elm-kar .elm-siatka::-webkit-scrollbar{display:none}
+.elm-kar .elm{scroll-snap-align:start}
+.elm-ster{display:flex;align-items:center;gap:28px;margin-top:26px}
+.elm-post{position:relative;flex:1;height:1px;background:var(--el-linia);overflow:hidden}
+.elm-post span{position:absolute;left:0;top:-1px;height:3px;width:30%;background:var(--el-zloto);transition:transform .25s ease-out}
+.el-strz button{width:46px;height:46px}
+.elg-m{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;padding-top:9px;border-top:1px solid rgba(184,151,94,.45);font:600 10.5px/1.5 var(--f-b);letter-spacing:.16em;text-transform:uppercase;color:var(--bordo)}
+.elg-m i{font-style:normal;color:var(--el-zloto)}
+.elg figcaption{gap:10px}
+.okx-sklad{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 32px}
+.okx-sklad[hidden]{display:none}
+.okx-g{font:600 10.5px/1 var(--f-b);letter-spacing:.24em;text-transform:uppercase;color:var(--el-zloto,#b8975e);margin-bottom:8px}
+.okx-sklad ul{list-style:none;margin:0;padding:0}
+.okx-sklad li{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:7px 0;border-top:1px solid rgba(95,6,15,.1)}
+.okx-sklad li:last-child{border-bottom:1px solid rgba(95,6,15,.1)}
+.okx-el-n{font:400 16px/1.3 var(--f-el);color:var(--el-tekst,#2a0a0e)}
+.okx-el-m{font:600 11px/1.3 var(--f-b);letter-spacing:.14em;text-transform:uppercase;color:var(--bordo);text-align:right}
+.okx-el .okx-pasek{width:min(760px,100%);align-items:flex-start}
+.okx-el .okx-txt{width:100%}
+@media (max-width:760px){
+  .elm-kar .elm-siatka{grid-auto-columns:76%;gap:12px;margin:0 -16px;padding:0 16px;scroll-padding-left:16px}
+  .elm-kar .elm:last-child:nth-child(odd){grid-column:auto}
+  .elm-kar .elm:last-child:nth-child(odd) .elm-b{aspect-ratio:4/5}
+  .elm-ster{gap:16px;margin-top:18px}
+  .el-strz{display:none}
+  .elm-n{font-size:28px}
+  .okx-el .okx-in{padding:56px 10px 10px;gap:10px}
+  .okx-el .okx-fig{flex:1 1 52%}
+  .okx-el .okx-pasek{max-height:46svh;overflow-y:auto;padding:14px 16px 16px}
+  .okx-el .okx-tyt{font-size:18px}
+  .okx-sklad{grid-template-columns:1fr;gap:12px}
+  .okx-el-n{font-size:15px}
+}
+
+/* baner Eleganzy na głównej: jeden znak (w logo), mniej tekstu; na telefonie zdjęcie czyste, treść pod nim na bordo */
+.elb::after{display:none}
+.elb-godz{font-size:13.5px}
+.elm-ster .el-strz{display:flex}
+@media (max-width:760px){
+  .elm-ster .el-strz{display:none}
+  .elb{display:block;min-height:0;background:var(--bordo-d)}
+  .elb::before{display:none}
+  .elb-foto{position:relative;inset:auto;z-index:auto;aspect-ratio:5/4;overflow:hidden}
+  .elb-foto img{position:absolute;inset:0;object-position:58% 30%}
+  .elb-foto::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;background:linear-gradient(to top,var(--bordo-d),rgba(60,4,9,0))}
+  .elb-in{padding:6px 20px 36px}
+  .elb-logo{width:104px}
+  .elb h2{margin-top:16px;font-size:clamp(30px,8.4vw,36px)}
+  .elb-lead{font-size:15.5px;margin-top:10px;color:rgba(255,255,255,.88)}
+  .elb-cta{margin-top:22px;gap:12px}
+  .elb-cta .elx-btn{width:100%;justify-content:center;text-align:center}
+}
+@media (min-width:761px){
+  .elb-in>*{max-width:440px}
+  .elb::before{background:linear-gradient(90deg,rgba(60,4,9,.95) 0%,rgba(60,4,9,.86) 30%,rgba(60,4,9,.25) 50%,rgba(60,4,9,0) 64%)}
+  .elb-foto img{object-position:72% 45%}
+}
+.el :focus-visible{outline-color:var(--el-zloto)}
