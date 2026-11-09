@@ -531,55 +531,15 @@
   function wszystko() { T = teraz(); DZIS = dzien(T, 0).k; rysujStatusy(); rysujDzis(); rysujDaty(); rysujMenu(); filtruj(); }
   wszystko();
 
-  /* ---------- karta "Okazje tygodnia": karuzela banerów (przesuwanie palcem, kropki, auto co 6 s) ---------- */
-  var okz = $('#okz');
-  if (okz) {
-    var tor = $('#okzTor', okz), kropki = $('.okz-kropki', okz), nr = $('.okz-nr', okz);
-    var sl = $$('.okz-sl', tor).filter(function (x) { return !x.hidden; });
-    if (!sl.length) {
-      okz.parentNode.removeChild(okz); var hh = $('.hero-okz'); if (hh) hh.classList.remove('hero-okz');
-    } else {
-      var ile = sl.length, akt = 0, pauza = false, widac = true, timer = null;
-      var bezRuchu = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      sl.forEach(function (x, i) { x.setAttribute('aria-label', (i + 1) + ' z ' + ile); });
-      var ster = $('.okz-ster', okz);
-      if (ile < 2 && ster) ster.hidden = true;
-      var rysuj = function () {
-        if (kropki) $$('button', kropki).forEach(function (b, i) { b.setAttribute('aria-current', String(i === akt)); });
-        if (nr) nr.textContent = (akt + 1) + ' / ' + ile;
-        sl.forEach(function (x, i) { var a = $('a', x); if (a) a.tabIndex = i === akt ? 0 : -1; });
-      };
-      var start = function () {
-        clearInterval(timer); timer = null;
-        if (bezRuchu || ile < 2) return;
-        timer = setInterval(function () { if (!pauza && widac && !document.hidden) idz(akt + 1, true); }, 6000);
-      };
-      var idz = function (i, auto) {
-        akt = (i + ile) % ile;
-        tor.scrollTo({ left: sl[akt].offsetLeft - tor.offsetLeft, behavior: bezRuchu ? 'auto' : 'smooth' });
-        rysuj(); if (!auto) start();
-      };
-      if (kropki) sl.forEach(function (x, i) {
-        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Okazja ' + (i + 1) + ' z ' + ile);
-        b.addEventListener('click', function () { idz(i); }); kropki.appendChild(b);
-      });
-      var t0;
-      tor.addEventListener('scroll', function () {
-        clearTimeout(t0);
-        t0 = setTimeout(function () { var i = Math.round(tor.scrollLeft / Math.max(1, tor.clientWidth)); if (i !== akt && i >= 0 && i < ile) { akt = i; rysuj(); } }, 80);
-      }, { passive: true });
-      $$('[data-okz]', okz).forEach(function (b) { b.addEventListener('click', function () { idz(akt + +b.getAttribute('data-okz')); }); });
-      okz.addEventListener('mouseenter', function () { pauza = true; });
-      okz.addEventListener('mouseleave', function () { pauza = false; });
-      okz.addEventListener('focusin', function () { pauza = true; });
-      okz.addEventListener('focusout', function () { pauza = false; });
-      var tp;
-      tor.addEventListener('touchstart', function () { pauza = true; clearTimeout(tp); }, { passive: true });
-      tor.addEventListener('touchend', function () { clearTimeout(tp); tp = setTimeout(function () { pauza = false; }, 8000); }, { passive: true });
-      if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { widac = en[0].isIntersecting; }).observe(okz);
-      rysuj(); start();
+  /* ---------- karty okazji: numer karty w rogu (po ukryciu nieaktualnych), pusta karuzela znika ---------- */
+  $$('.okk-tor').forEach(function (tor) {
+    var k = $$('.okk', tor).filter(function (x) { return !x.hidden; });
+    k.forEach(function (x, i) { var n = $('.okk-nr', x); if (n) n.textContent = (i + 1) + ' / ' + k.length; });
+    if (!k.length) {
+      var box = tor.closest('.okm, .okp'); if (box) box.hidden = true;
+      var h = $('.hero-okz'); if (h && tor.id === 'okmTor') h.classList.remove('hero-okz');
     }
-  }
+  });
   /* ---------- menu baru: zakładki dni (telefon), dziś otwarte domyślnie ---------- */
   $$('.menu-karta').forEach(function (k) {
     var tabs = $$('.menu-dni button', k), ul = $('.menu-t', k); if (!tabs.length || !ul) return;
