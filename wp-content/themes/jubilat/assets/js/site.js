@@ -44,13 +44,14 @@
       var zost = mm(h[1]) - t.min;
       return { otw: true, do: mm(h[1]), wkrotce: zost <= 45, txt: zost <= 45 ? 'Zamykamy za ' + zost + ' min, o ' + hh(mm(h[1])) : 'Otwarte do ' + hh(mm(h[1])) };
     }
+    var swDzis = D.sw.indexOf(dz.k) > -1;
     for (var i = 0; i < 10; i++) {
       var d2 = dzien(t, i), h2 = godzDnia(g, d2);
       if (!h2 || (i === 0 && t.min >= mm(h2[0]))) continue;
       var kiedy = i === 0 ? 'dziś' : i === 1 ? 'jutro' : DNI_W[d2.dow];
-      var sw = (i === 0 && D.sw.indexOf(dz.k) > -1) ? 'Dziś święto, ' : '';
-      return { otw: false, za: i * 1440 + mm(h2[0]) - t.min, txt: (sw ? sw + 'nieczynne. Otwieramy ' : 'Zamknięte, otwieramy ') + kiedy + ' o ' + hh(mm(h2[0])) };
+      return { otw: false, za: i * 1440 + mm(h2[0]) - t.min, txt: (swDzis ? 'Dziś święto, nieczynne. Otwieramy ' : 'Zamknięte, otwieramy ') + kiedy + ' o ' + hh(mm(h2[0])) };
     }
+    if (swDzis) return { otw: false, za: 99999, txt: 'Dziś święto, nieczynne' };
     return { otw: false, za: 99999, txt: 'Zamknięte' };
   }
   var PL = {};
@@ -434,18 +435,25 @@
   /* bilet antyspamowy: czas wejścia na stronę podpisany przez serwer (bez niego formularz nie przejdzie) */
   var BILET = '';
   var formEp = document.querySelector('form[data-endpoint]:not([data-demo])');
-  if (formEp) fetch(formEp.getAttribute('data-endpoint'), { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) { BILET = j.tk || ''; }).catch(function () {});
+  var pobierzBilet = function () {
+    return fetch(formEp.getAttribute('data-endpoint'), { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) { BILET = j.tk || ''; return BILET; });
+  };
+  if (formEp) pobierzBilet().catch(function () {});
   function wyslij(form, dane, w) {
-    var hp = form.querySelector('[name="www"]'); dane.www = hp ? hp.value : ''; dane.t = T0; dane.tk = BILET;
+    var hp = form.querySelector('[name="www"]'); dane.www = hp ? hp.value : ''; dane.t = T0;
     var btn = form.querySelector('[type="submit"]');
     if (form.hasAttribute('data-demo') || !form.getAttribute('data-endpoint')) {
       pokazWynik(w, 'Wersja testowa: formularz jest gotowy, ale wiadomość nie została wysłana. Po uruchomieniu strony trafi do Spółdzielni.'); return;
     }
     if (btn) btn.disabled = true;
-    fetch(form.getAttribute('data-endpoint'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dane) })
-      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok && j.ok, msg: j.msg }; }); })
+    (BILET ? Promise.resolve(BILET) : pobierzBilet()).then(function (tk) {
+      if (!tk) throw new Error('bilet');
+      dane.tk = tk;
+      return fetch(form.getAttribute('data-endpoint'), { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dane) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok && j.ok, msg: j.msg }; }); });
+    })
       .then(function (x) { pokazWynik(w, x.msg || (x.ok ? 'Dziękujemy, wiadomość została wysłana.' : 'Nie udało się wysłać wiadomości.'), !x.ok); if (x.ok) form.reset(); })
-      .catch(function () { pokazWynik(w, 'Nie udało się wysłać wiadomości. Zadzwoń: 12 422 80 40.', true); })
+      .catch(function () { pokazWynik(w, 'Nie udało się wysłać wiadomości. Odśwież stronę albo zadzwoń: 12 422 80 40.', true); })
       .then(function () { if (btn) btn.disabled = false; });
   }
 
@@ -488,6 +496,10 @@
       e.preventDefault();
       var w = $('#wynWynik');
       if (!v('fImie') || (!v('fTel') && !v('fEmail'))) { pokazWynik(w, 'Podaj imię oraz telefon albo e-mail, żebyśmy mogli odpowiedzieć.', true); return; }
+      if (v('fEmail') && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v('fEmail'))) { pokazWynik(w, 'Sprawdź adres e-mail.', true); return; }
+      if (v('fTel') && v('fTel').replace(/\D/g, '').length < 9) { pokazWynik(w, 'Sprawdź numer telefonu (min. 9 cyfr).', true); return; }
+      if (F.typ === 'sala' && v('fData') && v('fData') < DZIS) { pokazWynik(w, 'Data wydarzenia nie może być w przeszłości.', true); return; }
+      if (F.typ === 'sala' && v('fOsoby') && (+v('fOsoby') < 1 || +v('fOsoby') > 80)) { pokazWynik(w, 'Sala mieści do 80 osób.', true); return; }
       wyslij(wf, { typ: 'wynajem', imie: v('fImie'), tel: v('fTel'), email: v('fEmail'), temat: NAZWY[F.typ], wiad: tekst() }, w);
     });
     $('#wynKopiuj').addEventListener('click', function () {
@@ -527,18 +539,19 @@
   }
 
   /* ---------- start ---------- */
-  function wszystko() { T = teraz(); DZIS = dzien(T, 0).k; rysujStatusy(); rysujDzis(); rysujDaty(); rysujMenu(); filtruj(); }
+  function wszystko() { T = teraz(); DZIS = dzien(T, 0).k; rysujStatusy(); rysujDzis(); rysujDaty(); rysujMenu(); filtruj(); if (typeof numeruj === 'function') numeruj(); }
   wszystko();
 
   /* ---------- karty okazji: numer karty w rogu (po ukryciu nieaktualnych), pusta karuzela znika ---------- */
-  $$('.okk-tor').forEach(function (tor) {
+  function numeruj() { $$('.okk-tor').forEach(function (tor) {
     var k = $$('.okk', tor).filter(function (x) { return !x.hidden; });
     k.forEach(function (x, i) { var n = $('.okk-nr', x); if (n) n.textContent = (i + 1) + ' / ' + k.length; });
     if (!k.length) {
       var box = tor.closest('.okm, .okp'); if (box) box.hidden = true;
       var h = $('.hero-okz'); if (h && tor.id === 'okmTor') h.classList.remove('hero-okz');
     }
-  });
+  }); }
+  numeruj();
 
   /* ---------- przeglądarka zdjęć na cały ekran [data-okx] (okazje, kolekcja Eleganzy) ---------- */
   var okx = $('#okx');
@@ -588,6 +601,7 @@
     document.addEventListener('click', function (e) {
       var b = e.target.closest('[data-okx]'); if (!b) return;
       e.preventDefault();
+      var juz = okx.open;
       var kont = b.closest('[data-okx-grupa]') || b.closest('.okk-tor') || document;
       grupa = $$('[data-okx]', kont).filter(widoczne); if (!grupa.length) grupa = [b];
       powrot = b;
@@ -605,11 +619,11 @@
         });
       }
       pokazOkx(Math.max(0, grupa.indexOf(b)));
-      if (okx.showModal) okx.showModal(); else okx.setAttribute('open', '');
+      if (!juz) { if (okx.showModal) okx.showModal(); else okx.setAttribute('open', ''); }
       document.documentElement.classList.add('okx-otwarty');
       $('#okxZ').focus();
     });
-    okx.addEventListener('close', function () { document.documentElement.classList.remove('okx-otwarty'); oImg.src = 'data:,'; if (powrot) powrot.focus(); });
+    okx.addEventListener('close', function () { if (okx.open) return; document.documentElement.classList.remove('okx-otwarty'); oImg.src = 'data:,'; if (powrot) powrot.focus(); });
     $('#okxZ').addEventListener('click', zamknijOkx);
     var skBtn = $('#okxSkBtn');
     if (skBtn) skBtn.addEventListener('click', function () { var o = okx.classList.toggle('sk-otw'); skBtn.setAttribute('aria-expanded', String(o)); });
@@ -647,7 +661,7 @@
     var elF = '*', elK = '', elItems = $$('.elg', elg);
     var kolB = $$('[data-el-kol]'); if (kolB.length) elK = kolB[0].getAttribute('data-el-kol');
     var odm = function (n) { return n === 1 ? 'stylizacja' : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? 'stylizacje' : 'stylizacji'); };
-    var filtruj = function () {
+    var filtrujEl = function () {
       var n = 0;
       elg.classList.add('elg-zmiana');
       setTimeout(function () {
@@ -668,10 +682,10 @@
     var ustaw = function (f) {
       elF = f;
       $$('[data-el-f]').forEach(function (b) { var on = b.getAttribute('data-el-f') === f; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); if (on && b.scrollIntoView && b.parentNode.scrollWidth > b.parentNode.clientWidth) b.parentNode.scrollLeft = b.offsetLeft - 16; });
-      filtruj();
+      filtrujEl();
     };
     $$('[data-el-f]').forEach(function (b) { b.addEventListener('click', function () { ustaw(b.getAttribute('data-el-f')); }); });
-    kolB.forEach(function (b) { b.addEventListener('click', function () { elK = b.getAttribute('data-el-kol'); kolB.forEach(function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); }); filtruj(); }); });
+    kolB.forEach(function (b) { b.addEventListener('click', function () { elK = b.getAttribute('data-el-kol'); kolB.forEach(function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); }); filtrujEl(); }); });
     /* kafel marki: filtruje galerię i od razu otwiera przeglądarkę stylizacji tej marki (przesuwanie palcem) */
     var kafle = $$('[data-el-marka]');
     var otworzAlbum = function (slug) {
@@ -679,8 +693,8 @@
       var k = kafle.map(function (x) { return x.getAttribute('data-el-marka'); }).indexOf(slug), nb = kafle[(k + 1) % kafle.length];
       setTimeout(function () {
         var p = $('.elg:not([hidden]) .elg-b', elg); if (!p) return;
-        var ox = $('#okx'); if (ox && ox.open) { if (ox.close) ox.close(); }
-        p.click();
+        var ox = $('#okx');
+        p.click(); // okno otwarte: przycisk podmienia album bez zamykania
         if (ox) ox.jbAlbum = { otworz: otworzAlbum, nast: nb ? { slug: nb.getAttribute('data-el-marka'), nazwa: $('.elm-n', nb).textContent } : null };
         var nr = $('#okxDalej'); if (nr) nr.hidden = true;
       }, 230);
