@@ -1643,3 +1643,5 @@ html.okx-otwarty{overflow:hidden}
 .elb-marki a+a{margin-left:18px}
 .elb-marki a:hover{border-bottom-color:#e8d6b4}
 @media (max-width:760px){.elb-marki{font-size:15.5px;margin-top:16px}.elb-marki a+a{margin-left:14px}}
+
+@media (hover:none){.elg-b .okk-lupa{opacity:.92}}
