@@ -453,8 +453,8 @@
   var wf = $('#wynForm');
   if (wf) {
     var F = { typ: 'sala', biuro: '' };
-    var NAZWY = { sala: 'sali konferencyjnej', biuro: 'lokalu biurowego 113,10 m² na V piętrze Domu Handlowego', magazyn: 'powierzchni magazynowej' };
-    var TELE = { sala: ['+48126193398', '12 619 33 98'], biuro: ['+48126193419', '12 619 34 19'], magazyn: ['+48126193419', '12 619 34 19'] };
+    var NAZWY = { sala: 'sali konferencyjnej', biuro: 'lokalu biurowego 113,10 m² na V piętrze Domu Handlowego' };
+    var TELE = { sala: ['+48126193398', '12 619 33 98'], biuro: ['+48126193419', '12 619 34 19'] };
     var v = function (id) { var x = document.getElementById(id); return x ? x.value.trim() : ''; };
     var tekst = function () {
       var L1 = ['Dzień dobry,', '', 'jestem zainteresowany/a wynajmem ' + NAZWY[F.typ] + ' w Handlowej Spółdzielni Jubilat.'];
@@ -462,7 +462,6 @@
         if (v('fData')) { var a = v('fData').split('-'); L1.push('Termin: ' + (+a[2]) + ' ' + MIES[+a[1] - 1] + ' ' + a[0] + '.'); }
         if (v('fOsoby')) L1.push('Liczba osób: ' + v('fOsoby') + '.');
       }
-      if (F.typ === 'magazyn' && v('fM2')) L1.push('Potrzebna powierzchnia: ok. ' + v('fM2') + ' m².');
       if (F.typ !== 'sala') L1.push('Termin: ' + (v('fOd') || 'od zaraz') + '.');
       if (v('fOpis')) L1.push('', v('fOpis'));
       L1.push('', 'Proszę o informację o dostępności i warunkach najmu.', '', 'Pozdrawiam');
