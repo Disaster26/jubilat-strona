@@ -1743,3 +1743,33 @@ html.okx-otwarty{overflow:hidden}
 .hb .prod img{mix-blend-mode:multiply}
 .hb .prod picture,.hb .prod>img{background:#fff}
 .hb .prod img{background:#fff;box-shadow:inset 0 0 0 1px var(--linia);mix-blend-mode:normal}
+
+/* HOME & Beauty: zdjęcie produktu płynnie przechodzi w logo marki */
+.prod-fig{position:relative;display:block;aspect-ratio:1;overflow:hidden;background:#fff;box-shadow:inset 0 0 0 1px var(--linia)}
+.prod-fig picture,.prod-fig>img{position:absolute;inset:0}
+.hb .prod-fig img{width:100%;height:100%;aspect-ratio:auto;padding:18px;box-shadow:none;background:transparent;transition:opacity .35s ease-out}
+.prod-logo{position:absolute;inset:0;display:grid;place-items:center;padding:16%;background:#fff;opacity:0;transition:opacity .35s ease-out;pointer-events:none}
+.hb .prod-logo .prod-logo-img{width:100%;height:100%;object-fit:contain;padding:0}
+.prod-logo-txt{font:400 clamp(22px,2vw,30px)/1.1 var(--f-el);color:var(--ink);text-align:center;letter-spacing:.01em;padding-bottom:12px;border-bottom:2px solid var(--or)}
+@media (hover:hover){.prod-hb:hover .prod-logo,.prod-hb:focus-visible .prod-logo{opacity:1}}
+.prod-hb.logo .prod-logo{opacity:1}
+.prod-hb{cursor:pointer}
+@media (prefers-reduced-motion:reduce){.prod-logo,.hb .prod-fig img{transition:none}}
+
+/* gazetka: przerwa między wydaniami */
+.gzw{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:center;background:var(--biel);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--or);padding:clamp(24px,3.4vw,48px);max-width:920px}
+.gzw-znak{display:grid;place-items:center;width:clamp(84px,9vw,128px);aspect-ratio:1;border-radius:22px;background:var(--or);box-shadow:4px 4px 0 var(--grafit)}
+.gzw-znak img{width:58%;height:auto;filter:brightness(0)}
+.gzw-etyk{font-weight:700;font-size:14px;color:var(--or-d);margin-bottom:8px}
+.gzw-h{font-size:clamp(28px,3vw,44px)}
+.gzw-p{margin-top:12px;color:var(--szary);max-width:46ch}
+.gzw-p b{color:var(--ink)}
+.gzw-akcje{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:22px}
+.gazetka .gzw{margin-inline:auto}
+@media (max-width:760px){
+  .gzw{grid-template-columns:minmax(0,1fr);box-shadow:5px 5px 0 var(--or);padding:22px 18px}
+  .gzw-znak{width:68px;border-radius:14px}
+  .gzw-akcje .btn{width:100%}
+}
+.gzw-znak .skrz{width:54%;height:64%;background:var(--grafit)}
+.prod-fig{border:1px solid var(--linia);box-shadow:none}
