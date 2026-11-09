@@ -1773,3 +1773,90 @@ html.okx-otwarty{overflow:hidden}
 }
 .gzw-znak .skrz{width:54%;height:64%;background:var(--grafit)}
 .prod-fig{border:1px solid var(--linia);box-shadow:none}
+
+/* ---------- poprawki po audytach 09.11 ---------- */
+:root{--jasny:#5f6368}
+.stopka .st-h{font:700 14px/1.3 var(--f-b);letter-spacing:.08em;text-transform:uppercase;color:var(--or);margin:6px 0 14px}
+.form-info{font-size:14px;color:var(--szary);line-height:1.5;margin:4px 0 14px}
+.form-info a{color:var(--ink)}
+.pl-wstep{margin:0 0 14px;color:var(--szary)}
+.prod-brak{display:grid;place-items:center;aspect-ratio:1;background:var(--szar);font:400 22px/1.2 var(--f-el);color:var(--ink);padding:18px;text-align:center}
+.akt-logo-zast{background:var(--szar)}
+.akt-logo-zast .skrz{width:48px;height:58px}
+.okk-term{color:#a8440b}
+.menu-tyg .md small,span.md>small{color:#5a4a42}
+/* W1 hero 768: status pod przyciskiem */
+@media (min-width:700px) and (max-width:1060px){.hero-cta{flex-direction:column;align-items:flex-start}.hero-cta .teraz,.hero-okz .teraz{max-width:44ch}}
+/* W2 kafel sali: bez rozciągania na całą wysokość rzędu */
+@media (min-width:1061px){.wyn-teaser{align-self:start;min-height:0;height:min(720px,62vw);max-height:720px}}
+/* W3 kadry zdjęć sklepów (szyld w kadrze) */
+.bh-foto-lniana img{object-position:36% 40%}
+.bh-foto-makowskiego img{object-position:58% 48%}
+.bh-foto-nastawach img{object-position:62% 58%}
+/* W5 przeglądarka okazji na telefonie: baner na całą wysokość, przewijany w bok, pinch-zoom */
+@media (max-width:760px){
+  .okx:not(.okx-el) .okx-fig{overflow-x:auto;overflow-y:hidden;justify-content:flex-start;-webkit-overflow-scrolling:touch;touch-action:pan-x pinch-zoom}
+  .okx:not(.okx-el) .okx-fig img{max-width:none;max-height:none;height:min(58svh,520px);width:auto;border-radius:6px}
+  .okx:not(.okx-el) .okx-fig::after{content:"Przesuń, żeby zobaczyć cały baner";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:12.5px;padding:4px 10px;border-radius:99px;pointer-events:none;white-space:nowrap}
+  .okx:not(.okx-el) .okx-fig{position:relative}
+}
+/* W7 Eleganza: czytelne etykiety i przyciski na telefonie */
+@media (max-width:760px){
+  .elg-m,.elm-ile,.elk-ile,.elk-sezon,.lk-marki{font-size:12.5px}
+  .elx-btn,.elx-link{font-size:14px;min-height:44px;display:inline-flex;align-items:center}
+  .elp{min-height:44px}
+}
+/* W8 logotypy marek na telefonie: 3 kolumny, tekst min. 13 px */
+.marka-txt{font-size:13px!important}
+@media (max-width:760px){.el-marki ul,.marki-pas{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+/* W9 zaślepka mapy: tekst na ciemnym tle, biały przycisk */
+[data-mapa] .mz-a,[data-mapa] .mz-akcje,[data-mapa] .mz-n{position:relative;z-index:1}
+[data-mapa] .mz::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#1f1f1f 0%,#1f1f1f 52%,rgba(31,31,31,.6) 72%,rgba(31,31,31,0) 100%);pointer-events:none}
+[data-mapa] .mz-a{color:#e6e6e6}
+[data-mapa] .mz-pokaz{background:#fff;color:var(--grafit);box-shadow:3px 3px 0 var(--or)}
+[data-mapa] .mz-trasa{display:inline-flex;align-items:center;min-height:44px}
+/* W10 cele dotyku >= 44 px */
+@media (max-width:1060px){
+  .logo,.top-el{min-height:44px;display:inline-flex;align-items:center}
+  .top-tel{min-width:44px;min-height:44px;justify-content:center}
+}
+.pl-akcje a,.pl-akcje button{min-height:44px;display:inline-flex;align-items:center}
+.link-dalej{min-height:44px;display:inline-flex;align-items:center}
+.st-prawne a,.st-cookies{display:inline-block;padding:11px 0}
+.wylinka-badge{padding:12px 0}
+.dane dd a,.zarzad dd a{display:inline-block;padding:10px 0}
+.zgoda input{width:24px;height:24px}
+.okruszki a{display:inline-block;padding:10px 0}
+#tylkoOtw{min-height:44px}
+/* W11 Eleganza: miejsce na zdjęcia zarezerwowane */
+.elg-b{aspect-ratio:7/10}
+.elg-siatka:not(.elg-filtr) .elg-duzy .elg-b{aspect-ratio:auto}
+.el-o-dyptyk figure picture{aspect-ratio:2/3;display:block}
+/* D2 dolna granica tekstu na telefonie */
+@media (max-width:760px){
+  .st-prawne,.okruszki,.pl-rodzaj,.pl-akcje,.okk-term,.ok-in p,.ok-daty,.os-f,.co-t small{font-size:14px}
+  .wylinka-badge{font-size:13px}
+}
+/* D3 filtry placówek na 360 */
+.seg button{white-space:nowrap}
+@media (max-width:400px){.seg button{padding:10px 11px;font-size:14px}.filtry{justify-content:space-between}}
+/* D4 menu baru: równe zakładki */
+.menu-dni{align-items:stretch}
+.menu-dni button{min-height:52px}
+/* D5 baner cookies na wąskich ekranach */
+@media (max-width:400px){#ck .ck-przyciski,.ck-akcje{flex-direction:column}#ck .btn{width:100%;white-space:nowrap;font-size:15px}}
+/* D6 niedziele: dzień tygodnia w nowej linii, okruszki bez sierot */
+.daty li span{display:block;font-size:13.5px;color:var(--szary)}
+.okruszki li{white-space:nowrap}
+.okruszki ol{flex-wrap:wrap}
+/* D9 kontakt: formularz przyklejony obok długiej kolumny */
+@media (min-width:1061px){.dwie>.form{position:sticky;top:calc(var(--top) + 24px);align-self:start}}
+/* telefon w przyciskach bez łamania */
+.btn{white-space:nowrap}
+
+/* zaślepka mapy: grafika mniejsza i z boku, nie pod tekstem; ciemne tło pod tekstem z gradientu ponad grafiką */
+[data-mapa] .mz::after{right:-10%;bottom:-22%;width:min(40%,240px);opacity:.9;z-index:0}
+[data-mapa] .mz::before{z-index:1}
+[data-mapa] .mz>*{position:relative;z-index:2}
+@media (max-width:760px){[data-mapa] .mz::after{width:34%;right:-12%;bottom:-24%}[data-mapa] .mz::before{background:linear-gradient(90deg,#1f1f1f 0%,#1f1f1f 66%,rgba(31,31,31,.5) 86%,rgba(31,31,31,0) 100%)}}
+.el [data-mapa] .mz::before{background:none}
