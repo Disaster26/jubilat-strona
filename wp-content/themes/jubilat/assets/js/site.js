@@ -540,6 +540,103 @@
       var h = $('.hero-okz'); if (h && tor.id === 'okmTor') h.classList.remove('hero-okz');
     }
   });
+
+  /* ---------- przeglądarka zdjęć na cały ekran [data-okx] (okazje, kolekcja Eleganzy) ---------- */
+  var okx = $('#okx');
+  if (okx) {
+    var oImg = $('#okxImg'), oTyt = $('#okxTyt'), oMeta = $('#okxMeta'), oNr = $('#okxNr'), oOpis = $('#okxOpis'), oW = $('#okxWiecej'), oWT = $('#okxWiecejT');
+    var grupa = [], oi = 0, powrot = null;
+    var widoczne = function (b) { return b.offsetParent !== null && !b.closest('[hidden]'); };
+    var pokazOkx = function (i) {
+      oi = (i + grupa.length) % grupa.length;
+      var b = grupa[oi], d = b.dataset;
+      okx.classList.add('laduje');
+      oImg.onload = function () { okx.classList.remove('laduje'); };
+      oImg.src = d.duze; oImg.alt = d.tyt || '';
+      oTyt.textContent = d.tyt || '';
+      oMeta.textContent = d.meta || ''; oMeta.hidden = !d.meta;
+      oNr.textContent = grupa.length > 1 ? (oi + 1) + ' / ' + grupa.length : '';
+      oOpis.textContent = d.opis || ''; oOpis.hidden = !d.opis;
+      if (d.href) { oW.hidden = false; oW.href = d.href; oWT.textContent = d.hrefTxt || 'Więcej informacji'; } else { oW.hidden = true; }
+      okx.classList.toggle('jeden', grupa.length < 2);
+      var nast = grupa[(oi + 1) % grupa.length]; if (nast && nast !== b) { var pre = new Image(); pre.src = nast.dataset.duze; }
+    };
+    var zamknijOkx = function () { if (okx.open) { if (okx.close) okx.close(); else okx.removeAttribute('open'); } };
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-okx]'); if (!b) return;
+      e.preventDefault();
+      var kont = b.closest('[data-okx-grupa]') || b.closest('.okk-tor') || document;
+      grupa = $$('[data-okx]', kont).filter(widoczne); if (!grupa.length) grupa = [b];
+      powrot = b; pokazOkx(Math.max(0, grupa.indexOf(b)));
+      if (okx.showModal) okx.showModal(); else okx.setAttribute('open', '');
+      document.documentElement.classList.add('okx-otwarty');
+      $('#okxZ').focus();
+    });
+    okx.addEventListener('close', function () { document.documentElement.classList.remove('okx-otwarty'); oImg.src = 'data:,'; if (powrot) powrot.focus(); });
+    $('#okxZ').addEventListener('click', zamknijOkx);
+    $('#okxP').addEventListener('click', function () { pokazOkx(oi - 1); });
+    $('#okxN').addEventListener('click', function () { pokazOkx(oi + 1); });
+    okx.addEventListener('click', function (e) { if (e.target === okx || e.target.classList.contains('okx-in') || e.target.classList.contains('okx-fig')) zamknijOkx(); });
+    okx.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') pokazOkx(oi - 1);
+      else if (e.key === 'ArrowRight') pokazOkx(oi + 1);
+      else if (e.key === 'Tab') { // fokus zostaje w oknie
+        var f = $$('button, a[href]', okx).filter(function (x) { return !x.hidden && x.offsetParent !== null; });
+        if (!f.length) return;
+        if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      }
+    });
+    var tx = null, ty = null;
+    okx.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+    okx.addEventListener('touchend', function (e) {
+      if (tx === null) return;
+      var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty; tx = ty = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) pokazOkx(oi + (dx < 0 ? 1 : -1));
+      else if (dy > 90 && Math.abs(dy) > Math.abs(dx)) zamknijOkx();
+    }, { passive: true });
+  }
+
+  /* ---------- Eleganza: kolekcje i marki (filtry galerii bez przeładowania) ---------- */
+  var elg = $('.elg-siatka');
+  if (elg) {
+    var elF = '*', elK = '', elItems = $$('.elg', elg);
+    var kolB = $$('[data-el-kol]'); if (kolB.length) elK = kolB[0].getAttribute('data-el-kol');
+    var odm = function (n) { return n === 1 ? 'stylizacja' : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? 'stylizacje' : 'stylizacji'); };
+    var filtruj = function () {
+      var n = 0;
+      elg.classList.add('elg-zmiana');
+      setTimeout(function () {
+        elItems.forEach(function (li) {
+          var ok = !elK || li.getAttribute('data-kol') === elK;
+          if (ok && elF !== '*') {
+            var t = elF.slice(0, 1), v = elF.slice(2), pl = li.getAttribute('data-plec');
+            if (t === 'p') ok = pl === v || pl === 'para';
+            if (t === 'm') ok = (' ' + li.getAttribute('data-marki') + ' ').indexOf(' ' + v + ' ') > -1;
+          }
+          li.hidden = !ok; if (ok) n++;
+        });
+        $('#elIle').textContent = n; $('#elIleS').textContent = odm(n);
+        elg.classList.toggle('elg-filtr', elF !== '*');
+        elg.classList.remove('elg-zmiana');
+      }, 180);
+    };
+    var ustaw = function (f) {
+      elF = f;
+      $$('[data-el-f]').forEach(function (b) { var on = b.getAttribute('data-el-f') === f; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); if (on && b.scrollIntoView && b.parentNode.scrollWidth > b.parentNode.clientWidth) b.parentNode.scrollLeft = b.offsetLeft - 16; });
+      filtruj();
+    };
+    $$('[data-el-f]').forEach(function (b) { b.addEventListener('click', function () { ustaw(b.getAttribute('data-el-f')); }); });
+    kolB.forEach(function (b) { b.addEventListener('click', function () { elK = b.getAttribute('data-el-kol'); kolB.forEach(function (x) { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); }); filtruj(); }); });
+    $$('[data-el-marka]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        ustaw('m:' + b.getAttribute('data-el-marka'));
+        var g = $('#galeria'); if (g) g.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      });
+    });
+    var mp = (location.search.match(/[?&]marka=([a-z0-9-]+)/) || [])[1];
+    if (mp && $('[data-el-f="m:' + mp + '"]')) ustaw('m:' + mp);
+  }
   /* ---------- menu baru: zakładki dni (telefon), dziś otwarte domyślnie ---------- */
   $$('.menu-karta').forEach(function (k) {
     var tabs = $$('.menu-dni button', k), ul = $('.menu-t', k); if (!tabs.length || !ul) return;
