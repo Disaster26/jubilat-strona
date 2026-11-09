@@ -1907,3 +1907,63 @@ html.okx-otwarty{overflow:hidden}
 .okx-el .okx-mini{justify-content:safe center}
 .okx-el{background:rgba(14,14,13,.985)}
 .inne a{min-width:0;flex-wrap:wrap}.inne a>*{min-width:0;max-width:100%}.inne .st{white-space:normal}
+
+/* ---------- kafle marek: zdjęcia kolekcji (stories), postać nigdy nie przycięta ---------- */
+.elm-b{position:relative;display:block;width:100%;aspect-ratio:638/910;background:var(--bordo-d);overflow:hidden;isolation:isolate;touch-action:pan-y}
+.elm-b .elm-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;transition:opacity .25s ease-out}
+.elm-b::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(43,3,7,.88) 0%,rgba(43,3,7,.3) 34%,rgba(43,3,7,0) 55%),linear-gradient(to bottom,rgba(0,0,0,.28),rgba(0,0,0,0) 18%);pointer-events:none}
+.elm-st{position:absolute;left:12px;right:12px;top:12px;z-index:3;display:flex;gap:4px}
+.elm-st i{flex:1;height:2px;border-radius:2px;background:rgba(255,255,255,.4)}
+.elm-st i.on{background:#fff}
+.elm-st i.byl{background:rgba(255,255,255,.75)}
+.elm-p,.elm-n2{position:absolute;top:22px;bottom:30%;z-index:3;width:30%;border:0;background:transparent;color:#fff;font-size:30px;line-height:1;cursor:pointer;padding:0 10px;opacity:0;transition:opacity .2s ease-out}
+.elm-p{left:0;text-align:left}
+.elm-n2{right:0;text-align:right}
+.elm-b:hover .elm-p,.elm-b:hover .elm-n2,.elm-p:focus-visible,.elm-n2:focus-visible{opacity:.9}
+@media (hover:none){.elm-p,.elm-n2{opacity:.75;font-size:26px}}
+.elm-otw{position:absolute;inset:0;z-index:2;border:0;background:transparent;cursor:pointer;padding:0;color:#fff;text-align:left}
+.elm-b:hover .elm-img{transform:none}
+.elm-b:hover .elm-l,.elm-otw:focus-visible .elm-l{width:88px}
+.elm-otw:focus-visible{outline:2px solid var(--el-zloto);outline-offset:-4px}
+.elm-kar .el-strz{display:flex!important}
+@media (max-width:760px){.elm-ster{justify-content:flex-end}.elm-post{flex:1}}
+/* ---------- zdjęcia stylizacji: cała postać (proporcje kontenera = zdjęcia) ---------- */
+.elg-b{aspect-ratio:638/910}
+.elg-b img,.elg-siatka:not(.elg-filtr) .elg-duzy .elg-b img{width:100%;height:100%;aspect-ratio:638/910;object-fit:contain;background:#e9e2df}
+.elg-siatka:not(.elg-filtr) .elg-duzy{grid-row:auto}
+.elg-siatka:not(.elg-filtr) .elg-duzy .elg-b{aspect-ratio:638/910;flex:0 0 auto}
+.el-o-dyptyk img,.el-o-dyptyk figure picture{aspect-ratio:2/3!important;object-fit:contain;background:#f1ecea}
+.el-o-b{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
+.p-el-foto img{object-fit:contain;object-position:50% 100%;background:var(--bordo-d)}
+.lk-k img{aspect-ratio:638/910;object-fit:contain}
+/* ---------- okruszki: jedna linia, wspólna linia bazowa ---------- */
+.okruszki ol{display:flex;flex-wrap:wrap;align-items:center;gap:0;line-height:1.4}
+.okruszki li{display:inline-flex;align-items:center;white-space:nowrap;min-height:28px}
+.okruszki li+li::before{content:"/";display:inline-block;margin:0 9px;line-height:1}
+.okruszki a{display:inline-flex;align-items:center;padding:0;position:relative;line-height:1.4}
+.okruszki a::after{content:"";position:absolute;left:-4px;right:-4px;top:-9px;bottom:-9px}
+
+/* ---------- karty produktów: klik = karta produktu ---------- */
+.prod-a{display:flex;flex-direction:column;height:100%;text-decoration:none;color:inherit}
+.prod-a:focus-visible{outline:2px solid var(--or);outline-offset:4px}
+.prod-in{display:flex;flex-direction:column}
+.prod .cena{font:800 22px/1.1 var(--f-h);font-stretch:108%}
+.prod-t{display:block;font:600 15.5px/1.35 var(--f-b);margin-top:6px}
+.prod-a:hover .prod-t{text-decoration:underline;text-decoration-color:var(--or);text-underline-offset:3px}
+.prod-m{display:block;font-size:14px;color:var(--jasny);margin-top:auto;padding-top:6px}
+.okx-prod .okx-fig img{max-width:min(100%,640px);background:#fff;padding:24px;border-radius:12px}
+.okx-prod .okx-opis{color:var(--ink)}
+@media (max-width:760px){.okx-prod .okx-fig img{max-height:46svh;padding:14px}}
+.prod-str-uklad{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:start}
+.prod-str-foto{margin:0;background:#fff;border:1px solid var(--linia);padding:clamp(16px,3vw,40px)}
+.prod-str-foto img{width:100%;height:auto;max-height:560px;object-fit:contain}
+.prod-str h1{font-size:clamp(28px,3vw,44px)}
+.prod-str .dane{margin-top:22px}
+.prod-stan{color:var(--szary);font-size:14px;font-weight:400}
+.prod-opis{margin-top:18px;color:var(--szary)}
+.prod-akcje{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:26px}
+@media (max-width:760px){.prod-str-uklad{grid-template-columns:minmax(0,1fr)}.prod-akcje .btn{width:100%}}
+
+@media (max-width:760px){.okx-prod .okx-fig{overflow:hidden!important;justify-content:center!important;touch-action:auto!important}.okx-prod .okx-fig img{height:auto!important;max-width:100%!important;max-height:46svh!important}.okx-prod .okx-fig::after{content:none!important}}
+.okruszki li+li::before{content:none}
+.okruszki li:not(:last-child)::after{content:"/";display:inline-block;margin:0 9px;line-height:1;color:#aeb2b6}
