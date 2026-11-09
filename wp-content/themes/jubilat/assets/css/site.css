@@ -1906,3 +1906,4 @@ html.okx-otwarty{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.okx-el .okx-sklad,.okx-el .okx-mini button{transition:none}}
 .okx-el .okx-mini{justify-content:safe center}
 .okx-el{background:rgba(14,14,13,.985)}
+.inne a{min-width:0;flex-wrap:wrap}.inne a>*{min-width:0;max-width:100%}.inne .st{white-space:normal}
