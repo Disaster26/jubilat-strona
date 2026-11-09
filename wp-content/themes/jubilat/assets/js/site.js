@@ -73,7 +73,7 @@
       if (otw.length) {
         var dh = st[0], najdl = otw.slice().sort(function (a, b) { return b.s.do - a.s.do; })[0];
         tz.classList.remove('zamk');
-        t.innerHTML = 'Teraz otwarte: <b>' + otw.length + ' z ' + st.length + ' placówek</b>. ' + (dh.s.otw ? 'Dom Handlowy do ' + hh(dh.s.do) + '.' : 'Najdłużej: ' + najdl.p.n + ', do ' + hh(najdl.s.do) + '.');
+        t.innerHTML = 'Teraz otwarte: <b>' + otw.length + ' z ' + st.length + ' placówek</b>. ' + (dh.s.otw ? 'Dom Handlowy do ' + hh(dh.s.do) + '.' : 'Najdłużej: ' + esc(najdl.p.n) + ', do ' + hh(najdl.s.do) + '.');
       } else {
         var najw = st.slice().sort(function (a, b) { return a.s.za - b.s.za; })[0];
         tz.classList.add('zamk');
@@ -261,7 +261,7 @@
     var p = PL[id]; if (!p) return;
     el.setAttribute('data-akt', id);
     el.innerHTML = '<div class="mz"><span class="mz-znak" aria-hidden="true"></span><p class="mz-n">' + esc(p.nz) + '</p><p class="mz-a">' + esc(p.q.replace(p.nz + ', ', '')) + '</p>'
-      + '<div class="mz-akcje"><button type="button" class="mz-pokaz">Pokaż mapę (akceptuję cookies Google)</button><a class="mz-trasa" href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a></div></div>';
+      + '<div class="mz-akcje"><button type="button" class="mz-pokaz">Pokaż mapę Google</button><a class="mz-trasa" href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a></div></div>';
     $('.mz-pokaz', el).addEventListener('click', function () { zgodaDaj(); ustawMape(el, id); });
   }
   function iframe(el, src, tytul) {
@@ -275,7 +275,7 @@
     el.setAttribute('data-tryb', 'zgoda');
     el.innerHTML = '<div class="mz mz-all"><p class="mz-k">Mapa Google</p><p class="mz-n">' + (p ? esc(p.nz) : 'Sklepy Jubilat w Krakowie na jednej mapie') + '</p><p class="mz-a">'
       + (p ? esc(p.q.replace(p.nz + ', ', '')) : 'Dom Handlowy przy al. Krasińskiego, ' + sk + ' sklepów osiedlowych i bary mleczne Żaczek i Flisak.') + '</p>'
-      + '<div class="mz-akcje"><button type="button" class="mz-pokaz">Pokaż mapę Google (akceptuję cookies Google)</button>' + (p ? '<a class="mz-trasa" href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a>' : '') + '</div></div>';
+      + '<div class="mz-akcje"><button type="button" class="mz-pokaz">Pokaż mapę Google</button>' + (p ? '<a class="mz-trasa" href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a>' : '') + '</div></div>';
     $('.mz-pokaz', el).addEventListener('click', function () { zgodaDaj(); mapaAll(el, el.getAttribute('data-akt')); });
   }
   function podpis(el, p, pojedyncza) {
@@ -283,7 +283,7 @@
     var c = $('#mapaPodpis');
     if (c) {
       var wroc = pojedyncza ? '<button type="button" class="mp-wszystkie">Wszystkie placówki</button>' : '';
-      c.innerHTML = p ? '<b>' + esc(p.nz) + '</b><span><a href="' + p.u + '">Godziny i dojazd</a><a href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a>' + wroc + '</span>' : '';
+      c.innerHTML = p ? '<b>' + esc(p.nz) + '</b><span><a href="' + esc(p.u) + '">Godziny i dojazd</a><a href="' + trasa(p) + '" target="_blank" rel="noopener">Wyznacz trasę</a>' + wroc + '</span>' : '';
     }
     $$('.pl').forEach(function (x) { x.classList.toggle('pl-akt', !!p && x.dataset.id === p.id); });
   }
@@ -550,7 +550,7 @@
       oi = (i + grupa.length) % grupa.length;
       var b = grupa[oi], d = b.dataset;
       okx.classList.add('laduje');
-      oImg.onload = function () { okx.classList.remove('laduje'); };
+      oImg.onload = function () { okx.classList.remove('laduje'); var fg = oImg.parentNode; if (fg.scrollWidth > fg.clientWidth) fg.scrollLeft = (fg.scrollWidth - fg.clientWidth) / 2; };
       oImg.src = d.duze; oImg.alt = d.tyt || '';
       oTyt.textContent = d.tyt || '';
       oMeta.textContent = d.meta || ''; oMeta.hidden = !d.meta;
@@ -627,7 +627,7 @@
           var ok = !elK || li.getAttribute('data-kol') === elK;
           if (ok && elF !== '*') {
             var t = elF.slice(0, 1), v = elF.slice(2), pl = li.getAttribute('data-plec');
-            if (t === 'p') ok = pl === v || pl === 'para';
+            if (t === 'p') ok = pl === v;
             if (t === 'm') ok = (' ' + li.getAttribute('data-marki') + ' ').indexOf(' ' + v + ' ') > -1;
           }
           li.hidden = !ok; if (ok) n++;
