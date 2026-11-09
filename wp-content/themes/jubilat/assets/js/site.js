@@ -410,7 +410,7 @@
       cur = (i + items.length) % items.length;
       var b = items[cur], im = $('img', b), fc = b.parentNode.querySelector('figcaption');
       lbImg.src = b.getAttribute('data-duze') || im.currentSrc || im.src; lbImg.alt = im.alt;
-      lbOpis.textContent = fc ? fc.textContent : im.alt;
+      lbOpis.textContent = fc ? (fc.getAttribute('data-lbx-opis') || fc.textContent) : im.alt;
       lbNr.textContent = (cur + 1) + ' / ' + items.length;
     };
     items.forEach(function (b, i) {
@@ -431,8 +431,12 @@
   /* ---------- wysyłka formularzy (REST WordPress; tryb pokazowy: data-demo) ---------- */
   var T0 = Math.floor(Date.now() / 1000);
   function pokazWynik(w, txt, blad) { w.hidden = false; w.textContent = txt; w.classList.toggle('blad', !!blad); }
+  /* bilet antyspamowy: czas wejścia na stronę podpisany przez serwer (bez niego formularz nie przejdzie) */
+  var BILET = '';
+  var formEp = document.querySelector('form[data-endpoint]:not([data-demo])');
+  if (formEp) fetch(formEp.getAttribute('data-endpoint'), { credentials: 'same-origin', cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) { BILET = j.tk || ''; }).catch(function () {});
   function wyslij(form, dane, w) {
-    var hp = form.querySelector('[name="www"]'); dane.www = hp ? hp.value : ''; dane.t = T0;
+    var hp = form.querySelector('[name="www"]'); dane.www = hp ? hp.value : ''; dane.t = T0; dane.tk = BILET;
     var btn = form.querySelector('[type="submit"]');
     if (form.hasAttribute('data-demo') || !form.getAttribute('data-endpoint')) {
       pokazWynik(w, 'Wersja testowa: formularz jest gotowy, ale wiadomość nie została wysłana. Po uruchomieniu strony trafi do Spółdzielni.'); return;
@@ -449,8 +453,8 @@
   var wf = $('#wynForm');
   if (wf) {
     var F = { typ: 'sala', biuro: '' };
-    var NAZWY = { sala: 'sali konferencyjnej', biuro: 'biura', lokal: 'lokalu użytkowego przy ul. Machaya 1 (122 m²)', magazyn: 'powierzchni magazynowej' };
-    var TELE = { sala: ['+48126193398', '12 619 33 98'], biuro: ['+48126193419', '12 619 34 19'], lokal: ['+48126193419', '12 619 34 19'], magazyn: ['+48126193419', '12 619 34 19'] };
+    var NAZWY = { sala: 'sali konferencyjnej', biuro: 'lokalu biurowego 113,10 m² na V piętrze Domu Handlowego', magazyn: 'powierzchni magazynowej' };
+    var TELE = { sala: ['+48126193398', '12 619 33 98'], biuro: ['+48126193419', '12 619 34 19'], magazyn: ['+48126193419', '12 619 34 19'] };
     var v = function (id) { var x = document.getElementById(id); return x ? x.value.trim() : ''; };
     var tekst = function () {
       var L1 = ['Dzień dobry,', '', 'jestem zainteresowany/a wynajmem ' + NAZWY[F.typ] + ' w Handlowej Spółdzielni Jubilat.'];
@@ -458,7 +462,6 @@
         if (v('fData')) { var a = v('fData').split('-'); L1.push('Termin: ' + (+a[2]) + ' ' + MIES[+a[1] - 1] + ' ' + a[0] + '.'); }
         if (v('fOsoby')) L1.push('Liczba osób: ' + v('fOsoby') + '.');
       }
-      if (F.typ === 'biuro' && F.biuro) L1.push('Interesuje mnie biuro o powierzchni ' + F.biuro + '.');
       if (F.typ === 'magazyn' && v('fM2')) L1.push('Potrzebna powierzchnia: ok. ' + v('fM2') + ' m².');
       if (F.typ !== 'sala') L1.push('Termin: ' + (v('fOd') || 'od zaraz') + '.');
       if (v('fOpis')) L1.push('', v('fOpis'));
@@ -486,7 +489,7 @@
       e.preventDefault();
       var w = $('#wynWynik');
       if (!v('fImie') || (!v('fTel') && !v('fEmail'))) { pokazWynik(w, 'Podaj imię oraz telefon albo e-mail, żebyśmy mogli odpowiedzieć.', true); return; }
-      wyslij(wf, { typ: 'wynajem', imie: v('fImie'), tel: v('fTel'), email: v('fEmail'), temat: NAZWY[F.typ].replace(' przy ul. Machaya 1 (122 m²)', ', ul. Machaya 1'), wiad: tekst() }, w);
+      wyslij(wf, { typ: 'wynajem', imie: v('fImie'), tel: v('fTel'), email: v('fEmail'), temat: NAZWY[F.typ], wiad: tekst() }, w);
     });
     $('#wynKopiuj').addEventListener('click', function () {
       var b = this, gotowe = function () { b.textContent = 'Skopiowano'; setTimeout(function () { b.textContent = 'Kopiuj treść'; }, 1800); };
@@ -527,6 +530,56 @@
   /* ---------- start ---------- */
   function wszystko() { T = teraz(); DZIS = dzien(T, 0).k; rysujStatusy(); rysujDzis(); rysujDaty(); rysujMenu(); filtruj(); }
   wszystko();
+
+  /* ---------- karta "Okazje tygodnia": karuzela banerów (przesuwanie palcem, kropki, auto co 6 s) ---------- */
+  var okz = $('#okz');
+  if (okz) {
+    var tor = $('#okzTor', okz), kropki = $('.okz-kropki', okz), nr = $('.okz-nr', okz);
+    var sl = $$('.okz-sl', tor).filter(function (x) { return !x.hidden; });
+    if (!sl.length) {
+      okz.parentNode.removeChild(okz); var hh = $('.hero-okz'); if (hh) hh.classList.remove('hero-okz');
+    } else {
+      var ile = sl.length, akt = 0, pauza = false, widac = true, timer = null;
+      var bezRuchu = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      sl.forEach(function (x, i) { x.setAttribute('aria-label', (i + 1) + ' z ' + ile); });
+      var ster = $('.okz-ster', okz);
+      if (ile < 2 && ster) ster.hidden = true;
+      var rysuj = function () {
+        if (kropki) $$('button', kropki).forEach(function (b, i) { b.setAttribute('aria-current', String(i === akt)); });
+        if (nr) nr.textContent = (akt + 1) + ' / ' + ile;
+        sl.forEach(function (x, i) { var a = $('a', x); if (a) a.tabIndex = i === akt ? 0 : -1; });
+      };
+      var start = function () {
+        clearInterval(timer); timer = null;
+        if (bezRuchu || ile < 2) return;
+        timer = setInterval(function () { if (!pauza && widac && !document.hidden) idz(akt + 1, true); }, 6000);
+      };
+      var idz = function (i, auto) {
+        akt = (i + ile) % ile;
+        tor.scrollTo({ left: sl[akt].offsetLeft - tor.offsetLeft, behavior: bezRuchu ? 'auto' : 'smooth' });
+        rysuj(); if (!auto) start();
+      };
+      if (kropki) sl.forEach(function (x, i) {
+        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Okazja ' + (i + 1) + ' z ' + ile);
+        b.addEventListener('click', function () { idz(i); }); kropki.appendChild(b);
+      });
+      var t0;
+      tor.addEventListener('scroll', function () {
+        clearTimeout(t0);
+        t0 = setTimeout(function () { var i = Math.round(tor.scrollLeft / Math.max(1, tor.clientWidth)); if (i !== akt && i >= 0 && i < ile) { akt = i; rysuj(); } }, 80);
+      }, { passive: true });
+      $$('[data-okz]', okz).forEach(function (b) { b.addEventListener('click', function () { idz(akt + +b.getAttribute('data-okz')); }); });
+      okz.addEventListener('mouseenter', function () { pauza = true; });
+      okz.addEventListener('mouseleave', function () { pauza = false; });
+      okz.addEventListener('focusin', function () { pauza = true; });
+      okz.addEventListener('focusout', function () { pauza = false; });
+      var tp;
+      tor.addEventListener('touchstart', function () { pauza = true; clearTimeout(tp); }, { passive: true });
+      tor.addEventListener('touchend', function () { clearTimeout(tp); tp = setTimeout(function () { pauza = false; }, 8000); }, { passive: true });
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { widac = en[0].isIntersecting; }).observe(okz);
+      rysuj(); start();
+    }
+  }
   /* ---------- menu baru: zakładki dni (telefon), dziś otwarte domyślnie ---------- */
   $$('.menu-karta').forEach(function (k) {
     var tabs = $$('.menu-dni button', k), ul = $('.menu-t', k); if (!tabs.length || !ul) return;
