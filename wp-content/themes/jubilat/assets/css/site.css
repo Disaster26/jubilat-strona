@@ -773,7 +773,7 @@ body.ck-on .mob{transform:translateY(110%)!important}
 .lk-k{scroll-snap-align:start}
 .lk-k figure{margin:0}
 .lk-k button{display:block;width:100%;padding:0;border:0;background:var(--szar2);cursor:zoom-in;overflow:hidden}
-.lk-k img{width:100%;aspect-ratio:2/3;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.lk-k img{width:100%;aspect-ratio:7/10;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
 .lk-k button:hover img{transform:scale(1.03)}
 .lk-k figcaption{margin-top:12px;font:400 17px/1.35 var(--f-el);color:var(--el-tekst)}
 
@@ -1333,4 +1333,145 @@ a,button{-webkit-tap-highlight-color:transparent}
 @media (max-width:760px){
   #mapa[data-tryb="mymaps"] iframe{height:calc(100% + 67px + 24px)}
   #mapa[data-tryb="mymaps"]+.mapa-atr{display:block}
+}
+
+/* ---------- okazje: baner w ramce 2:1 (treść w całości, wokół rozmyta wersja banera) ---------- */
+.bn-ramka{position:relative;aspect-ratio:2/1;overflow:hidden;background:#f3e6cc;border-radius:12px;isolation:isolate}
+.bn-ramka::before{content:"";position:absolute;inset:-24px;z-index:-1;background:var(--tlo,none) center/cover no-repeat;filter:blur(18px) saturate(1.05);opacity:.9}
+.bn-ramka picture{position:absolute;inset:0}
+.bn-ramka img,.bn-ramka .bn-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.ban .bn-ramka{border-radius:0}
+
+/* ---------- pierwszy ekran z kartą "Okazje tygodnia" ---------- */
+.hero-prawa{order:2;position:relative;min-width:0;display:flex}
+.hero-prawa .hero-foto{flex:1 1 auto}
+.okz{position:relative;min-width:0}
+.okz-glowa{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.okz-etyk{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-stretch:108%;font-size:15px;letter-spacing:.01em;text-transform:uppercase;color:var(--ink)}
+.okz-etyk .skrz{width:15px;height:18px}
+.okz-wsz{font-size:14.5px;font-weight:700;color:var(--or-d);text-underline-offset:3px}
+.okz-tor{list-style:none;margin:0;padding:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;border-radius:12px}
+.okz-tor::-webkit-scrollbar{display:none}
+.okz-sl{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always}
+.okz-sl[hidden]{display:none}
+.okz-a{display:block;text-decoration:none;color:inherit}
+.okz-a .bn-ramka{box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.okz-opis{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:12px 2px 0}
+.okz-tyt{font-weight:700;font-size:15.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.okz-a:hover .okz-tyt{text-decoration:underline;text-decoration-color:var(--or);text-decoration-thickness:2px;text-underline-offset:3px}
+.okz-term{flex:0 0 auto;font-size:13px;font-weight:700;color:var(--or-d);background:var(--or-j);padding:3px 9px;border-radius:999px;white-space:nowrap}
+.okz-ster{display:flex;align-items:center;gap:10px;margin-top:14px}
+.okz-b{flex:0 0 auto;width:38px;height:38px;border-radius:10px;border:2px solid var(--ink);background:var(--biel);font-size:20px;line-height:1;padding:0 0 3px;cursor:pointer;transition:background .15s,color .15s}
+.okz-b:hover{background:var(--ink);color:#fff}
+.okz-kropki{display:flex;gap:6px;flex:1;flex-wrap:wrap;min-width:0}
+.okz-kropki button{width:8px;height:8px;padding:0;border:0;border-radius:99px;background:#c9ccd0;cursor:pointer;transition:width .25s,background .25s;position:relative}
+.okz-kropki button::after{content:"";position:absolute;inset:-9px -4px}
+.okz-kropki button[aria-current="true"]{width:24px;background:var(--or)}
+.okz-nr{font-size:13.5px;font-weight:700;color:var(--szary);font-variant-numeric:tabular-nums;min-width:3.2em;text-align:right}
+
+@media (min-width:761px){
+  .hero-okz .okz{position:absolute;z-index:2;right:clamp(20px,4vw,72px);bottom:clamp(20px,4.5svh,56px);width:min(600px,calc(100% - 15% - clamp(20px,4vw,72px)));background:var(--biel);padding:18px 20px 16px;border-radius:18px;box-shadow:6px 6px 0 var(--grafit),0 24px 60px rgba(0,0,0,.28)}
+  .hero-okz .hero-foto figcaption{left:15%;right:auto;bottom:auto;top:0;padding:18px 26px 40px 30px;background:linear-gradient(to bottom,rgba(0,0,0,.4),rgba(0,0,0,0))}
+  .hero-okz .hero-foto img{object-position:50% 0}
+}
+@media (min-width:761px) and (max-height:820px){
+  .hero-okz .okz{width:min(520px,calc(100% - 15% - 40px));padding:14px 16px 12px}
+  .okz-glowa{margin-bottom:8px}
+  .okz-ster{margin-top:8px}
+  .okz-opis{padding-top:8px}
+}
+@media (max-width:760px){
+  /* telefon: hasło, pod nim karta okazji, potem skróty działów i przycisk - wszystko w pierwszym ekranie */
+  .hero.hero-okz{height:auto;min-height:calc(100svh - var(--top));justify-content:flex-start;padding:min(12px,1.6svh) 16px min(12px,1.6svh)}
+  .hero-okz h1,.hero-okz .hero-prawa,.hero-okz .hero-co,.hero-okz .hero-cta{margin-top:auto!important}
+  .hero-okz .hero-in{display:contents}
+  .hero-okz .hero-adres{order:1}
+  .hero-okz h1{order:2;font-size:min(8vw,3.9svh)}
+  .hero-okz .hero-prawa{order:3;display:block;padding-top:min(14px,1.8svh)}
+  .hero-okz .hero-foto{display:none}
+  .hero-okz .hero-co{order:4;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:min(12px,1.6svh) 16px 2px;scroll-padding-left:16px}
+  .hero-okz .hero-co::-webkit-scrollbar{display:none}
+  .hero-okz .hero-co li{flex:0 0 auto}
+  .hero-okz .hero-co a{gap:8px;padding:5px 12px 5px 5px;border:1.5px solid var(--linia);border-radius:12px}
+  .hero-okz .hero-co .kafel{width:28px;height:28px;font-size:13.5px;border-radius:7px;box-shadow:none}
+  .hero-okz .co-t{display:block}
+  .hero-okz .co-t b{font-size:14px;white-space:nowrap}
+  .hero-okz .co-t small{display:none}
+  .hero-okz .hero-co-el b{font-size:16px}
+  .hero-okz .hero-co-el b::after{content:none}
+  .hero-okz .hero-cta{order:5;padding-top:min(14px,1.8svh)}
+  .hero-okz h1{padding-top:min(2px,.3svh)}
+  .okz-glowa{margin-bottom:min(8px,1.1svh)}
+  .okz-etyk{font-size:13px}
+  .okz-wsz{font-size:13.5px}
+  .okz-tor{border-radius:10px}
+  .bn-ramka{border-radius:10px}
+  .okz-sl .bn-ramka{aspect-ratio:auto;height:min(calc((100vw - 32px)/2),23.5svh)}
+  .okz-opis{padding-top:min(8px,1svh);gap:10px;align-items:center}
+  .okz-tyt{font-size:14px;-webkit-line-clamp:1}
+  .okz-term{font-size:12.5px;padding:2px 8px}
+  .okz-ster{margin-top:min(8px,1svh);gap:8px}
+  .okz-b{display:none}
+  .okz-kropki{gap:5px}
+}
+
+/* ---------- rząd "Okazje i nowości" ---------- */
+.on-sek{padding-block:clamp(48px,6vw,88px);background:var(--szar)}
+.on-tor{list-style:none;margin:0;padding:0 0 8px;display:grid;grid-auto-flow:column;grid-auto-columns:clamp(260px,23vw,310px);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.on-tor::-webkit-scrollbar{display:none}
+.on-k{scroll-snap-align:start;min-width:0}
+.on-k[hidden]{display:none}
+.on-k>a{display:flex;flex-direction:column;height:100%;background:var(--biel);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 1px 0 rgba(0,0,0,.04);transition:transform .2s,box-shadow .2s}
+.on-k>a:hover{transform:translateY(-3px);box-shadow:4px 4px 0 var(--grafit)}
+.on-k .bn-ramka{border-radius:0}
+.on-foto{position:relative;display:block;aspect-ratio:2/1;background:var(--biel);border-bottom:1px solid var(--linia)}
+.on-foto picture{position:absolute;inset:10px 40% 10px 10px}
+.on-foto img{width:100%;height:100%;object-fit:contain}
+.on-cena{position:absolute;right:14px;top:50%;transform:translateY(-50%) rotate(-3deg);background:var(--or);color:var(--grafit);font:800 26px/1 var(--f-h);font-stretch:110%;padding:8px 10px;border-radius:8px;box-shadow:3px 3px 0 var(--grafit);white-space:nowrap}
+.on-cena small{font-size:12px;font-weight:700}
+.on-in{display:flex;flex-direction:column;gap:6px;padding:14px 16px 16px}
+.on-tyt{font-weight:700;font-size:15px;line-height:1.35}
+.on-term{font-size:13.5px;color:var(--szary);line-height:1.4}
+.on-sek .sek-stopka{margin-top:26px}
+@media (max-width:760px){
+  .on-tor{grid-auto-columns:78%;gap:12px;margin-right:-16px;padding-right:16px}
+  .on-sek .sek-stopka .btn{width:100%}
+}
+@media (max-width:760px) and (min-height:800px){
+  /* wyższe telefony: skróty działów jako lista (jak bez karty okazji) */
+  .hero-okz .hero-co{display:block;overflow:visible;margin:0;padding:min(12px,1.4svh) 0 0}
+  .hero-okz .hero-co a{gap:12px;padding:3px 0;border:0;border-radius:0}
+  .hero-okz .hero-co .kafel{width:30px;height:30px;font-size:14px;border-radius:8px;box-shadow:2px 2px 0 var(--grafit)}
+  .hero-okz .co-t{display:flex}
+  .hero-okz .co-t b{font-size:14.5px}
+  .hero-okz .co-t small{display:inline;font-size:12.5px}
+  .hero-okz .hero-co-el b{font-size:17px}
+}
+
+/* Eleganza: podpis stylizacji z markami */
+.lk-k figcaption{display:flex;flex-direction:column;gap:6px}
+.lk-t{display:block}
+.lk-marki{display:flex;flex-direction:column;gap:2px;font:500 12.5px/1.45 var(--f-b);letter-spacing:.06em;text-transform:uppercase;color:var(--bordo)}
+.lk-m{display:block}
+
+/* ---------- zarząd i kierownictwo ---------- */
+.os-lista{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:28px 22px}
+.os-zarzad{grid-template-columns:repeat(auto-fill,minmax(250px,300px))}
+.osoba figure{margin:0}
+.osoba img{width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--szar);border-radius:14px}
+.osoba figcaption{display:flex;flex-direction:column;gap:4px;padding-top:14px}
+.os-n{font-weight:800;font-stretch:106%;font-size:18px;line-height:1.25}
+.os-f{font-size:14.5px;color:var(--szary);line-height:1.4}
+.os-glowa2{margin-top:clamp(56px,6vw,88px)}
+.os-dane{margin-top:clamp(48px,5vw,72px)}
+@media (max-width:760px){
+  .os-lista,.os-zarzad{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px}
+  .os-n{font-size:16px}
+  .os-f{font-size:13.5px}
+}
+@media (min-width:761px) and (max-width:1060px){
+  .hero-okz .okz{right:14px;width:calc(100% - 12% - 14px);padding:12px 12px 10px;border-radius:14px}
+  .hero-okz .okz-wsz{display:none}
+  .hero-okz .okz-etyk{white-space:nowrap}
+  .hero-okz .okz-opis{flex-direction:column;gap:6px;align-items:flex-start}
 }
