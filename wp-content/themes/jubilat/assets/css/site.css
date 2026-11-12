@@ -725,6 +725,18 @@ body.ck-on .mob{transform:translateY(110%)!important}
 .menu-t li.dzisiaj{background:var(--or-j);margin-inline:-16px;padding-inline:16px}
 .menu-t li.dzisiaj .md::after{content:"Dziś";display:inline-block;margin-left:8px;font-size:12.5px;font-weight:800;color:var(--grafit);background:var(--or);padding:2px 7px;vertical-align:2px}
 .menu-info{margin-top:14px;font-size:14.5px;color:var(--szary)}
+.menu-plakat{margin:28px 0 0;max-width:420px}
+.menu-plakat button{display:block;position:relative;width:100%;padding:0;border:1px solid var(--linia);background:#fff;cursor:zoom-in}
+.menu-plakat img{display:block;width:100%;height:auto;aspect-ratio:1}
+.menu-plakat .okk-lupa{position:absolute;right:10px;bottom:10px}
+.menu-plakat figcaption{margin-top:8px;font-size:14px;color:var(--szary)}
+@media (min-width:901px){
+  .menu-karta.z-plakatem{display:grid;grid-template-columns:minmax(0,1fr) 300px;column-gap:56px;align-items:start}
+  .menu-karta.z-plakatem>*{grid-column:1}
+  .menu-karta.z-plakatem>.menu-plakat{grid-column:2;grid-row:1/span 4;margin-top:0}
+}
+.bar-app{margin-top:10px;font-size:15px;color:var(--ink)}
+.bar-app a{font-weight:700}
 /* =====================================================================
    SALON ELEGANZA - "świat dobrych ubrań": edytorial, bordo z logo, Inria Serif, litera E
    ===================================================================== */
@@ -1799,6 +1811,12 @@ html.okx-otwarty{overflow:hidden}
   .okx:not(.okx-el) .okx-fig img{max-width:none;max-height:none;height:min(58svh,520px);width:auto;border-radius:6px}
   .okx:not(.okx-el) .okx-fig::after{content:"Przesuń, żeby zobaczyć cały baner";position:absolute;left:50%;bottom:6px;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:12.5px;padding:4px 10px;border-radius:99px;pointer-events:none;white-space:nowrap}
   .okx:not(.okx-el) .okx-fig{position:relative}
+}
+/* plakat menu baru w przeglądarce: kwadrat mieści się w ekranie, bez podpowiedzi o przewijaniu */
+@media (max-width:760px){
+  .okx.okx-kw .okx-fig{justify-content:center}
+  .okx.okx-kw .okx-fig img{height:auto;width:100%;max-width:min(100%,58svh)}
+  .okx.okx-kw .okx-fig::after{content:none}
 }
 /* W7 Eleganza: czytelne etykiety i przyciski na telefonie */
 @media (max-width:760px){
